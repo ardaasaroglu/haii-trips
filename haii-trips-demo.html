@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Haii Trips</title>
+<meta name="description" content="A conversation becomes a trip. A prototype that turns what people said into a deck of cards to swipe, each card quoting their words.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Haii Trips">
+<meta property="og:description" content="A conversation becomes a trip. A prototype that turns what people said into a deck of cards to swipe, each card quoting their words.">
+<meta property="og:image" content="https://ardaasaroglu.github.io/haii-trips/docs/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#F6F8FC">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNEOTU0MkIiLz48c3RvcCBvZmZzZXQ9Ii4zOCIgc3RvcC1jb2xvcj0iI0M5QTIyNyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii43MiIgc3RvcC1jb2xvcj0iIzEyNzk2QSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJGNkZBOCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTIiIGZpbGw9IiNGQUY2RjAiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE1MCIgZmlsbD0idXJsKCNnKSIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iODIiIGZpbGw9IiNGQUY2RjAiLz4KPC9zdmc+Cg==">
+<style>
+:root{
+  --ground:#F6F8FC; --surface:#FFFFFF;
+  --ink:#0F172A; --mut:#64748B; --faint:#94A3B8;
+  --line:rgba(15,23,42,.10); --line-soft:rgba(15,23,42,.06);
+  --navy:#1E3A8A; --navy-2:#1B3B8F; --blue:#2563EB;
+  --blue-soft:rgba(37,99,235,.09); --blue-line:rgba(37,99,235,.22);
+  --good:#0E9F6E; --good-soft:#E7F6F0; --good-ink:#15803D;
+  --warn:#B45309; --warn-soft:#FEF3E2; --warn-line:rgba(180,83,9,.26);
+  --bad:#DC2626; --bad-soft:#FEECEC;
+  --k-place:#2563EB; --k-food:#B45309; --k-do:#0E7490; --k-stay:#6D28D9; --k-move:#64748B;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sh1:0 1px 2px rgba(15,23,42,.05);
+  --sh2:0 2px 6px rgba(15,23,42,.05),0 16px 34px -20px rgba(15,23,42,.30);
+  --sh3:0 6px 14px rgba(15,23,42,.07),0 28px 56px -24px rgba(15,23,42,.38);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--ground);color:var(--ink);font-family:var(--sans);overflow-x:clip}
+body{min-height:100dvh;display:flex;justify-content:center}
+#app{width:100%;max-width:430px;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+.hide{display:none!important}
+button{font-family:var(--sans);cursor:pointer;border:none}
+
+/* ---------- shared language ---------- */
+.eyebrow{font:700 11px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--blue);text-align:center}
+.eyebrow i{display:block;width:34px;height:2px;border-radius:2px;background:var(--blue-line);margin:10px auto 0}
+.badgeicon{width:40px;height:40px;border-radius:50%;background:var(--blue-soft);display:grid;place-items:center;margin:0 auto}
+.badgeicon svg{width:19px;height:19px;stroke:var(--blue);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cta{width:100%;height:60px;border-radius:16px;background:var(--navy);color:#fff;font:600 16px/1 var(--sans);
+  box-shadow:0 10px 24px -12px rgba(30,58,138,.65);display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .12s ease,opacity .12s}
+.cta:active{transform:scale(.985)}
+.cta[disabled]{opacity:.45;cursor:default}
+.cta svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ghost{height:60px;padding:0 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);
+  color:var(--mut);font:600 15px/1 var(--sans)}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:20px}
+.dots i{width:22px;height:4px;border-radius:99px;background:var(--line)}
+.dots i.on{background:var(--navy);width:26px}
+
+/* ---------- intro: a full-bleed welcome screen ----------
+   Edge to edge, content sitting ON the scene rather than beside it, and a white sheet that the
+   floating card straddles. The gutter is inside the sections, never on the image. */
+#vIntro{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.heroimg{position:absolute;left:0;right:0;top:0;height:min(58vh,470px);z-index:0}
+.heroimg svg{width:100%;height:100%;display:block}
+.heroveil{position:absolute;left:0;right:0;top:0;height:min(58vh,470px);z-index:1;
+  background:linear-gradient(180deg,rgba(246,248,252,.72) 0%,rgba(246,248,252,.10) 34%,rgba(246,248,252,0) 58%,rgba(246,248,252,.85) 100%)}
+.heroinner{position:relative;z-index:3;padding:clamp(22px,4.6vh,42px) 24px 0;text-align:center}
+.heroinner h1{font:400 clamp(27px,4.4vh,35px)/1.13 var(--serif);letter-spacing:-.018em;margin:clamp(10px,2vh,18px) 0 10px;text-wrap:balance;
+  text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.heroinner h1 b{font-weight:400;color:var(--blue)}
+.heroinner p{font:400 15px/1.5 var(--sans);color:var(--mut);margin:0 auto;max-width:290px;text-wrap:pretty}
+.floatzone{position:relative;z-index:4;padding:0 22px;margin-top:clamp(12px,2.6vh,26px)}
+.floatcard{background:var(--surface);border-radius:20px;box-shadow:var(--sh3);padding:16px 17px;transform:rotate(-2deg)}
+.floatcard.two{position:absolute;left:34px;right:14px;top:16px;transform:rotate(3deg);opacity:.5;z-index:-1;height:118px}
+.fbrand{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.fbrand svg{width:14px;height:14px;stroke:var(--navy);fill:none;stroke-width:1.8}
+.fbrand .fname{font:700 10.5px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--navy)}
+.fgrade{margin-left:auto;font:700 13px/1 var(--sans);color:var(--good-ink);background:var(--good-soft);
+  border-radius:9px;padding:7px 9px}
+.floatcard h3{font:600 19px/1.2 var(--sans);margin:0 0 9px;letter-spacing:-.012em}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--sans);border-radius:99px;padding:6px 10px;
+  background:var(--good-soft);color:var(--good-ink)}
+.pill i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.fline{font:400 14px/1.45 var(--sans);color:var(--ink);margin:10px 0 0}
+.ffoot{font:400 12px/1 var(--sans);color:var(--faint);margin-top:11px}
+.ffoot b{color:var(--blue);font-weight:600}
+/* The white sheet the card sits into. Negative margin pulls it under the card so they overlap. */
+.lower{position:relative;z-index:2;background:var(--surface);border-radius:30px 30px 0 0;margin-top:-34px;
+  padding:clamp(42px,6vh,54px) 22px clamp(18px,3vh,26px);flex:1;display:flex;flex-direction:column;
+  box-shadow:0 -14px 34px -22px rgba(15,23,42,.30)}
+.three{display:flex;gap:8px;margin-top:clamp(14px,2.6vh,22px)}
+.three div{flex:1;text-align:center}
+.three .badgeicon{width:36px;height:36px;margin-bottom:9px}
+.three p{font:500 12px/1.35 var(--sans);color:var(--mut);margin:0}
+.introbtm{margin-top:auto;padding-top:clamp(16px,3vh,26px)}
+.skip{display:block;margin:14px auto 0;background:none;color:var(--faint);font:500 13px/1 var(--sans)}
+/* ---------- safety briefing screens ----------
+   A sample briefing, reached from the secondary link on the welcome screen (#vIntro).
+   Heights are viewport units, never percentages of a content-sized parent. */
+.bscreen{flex:1;display:none;flex-direction:column;position:relative;overflow:hidden;background:var(--ground)}
+.bscreen.on{display:flex}
+.bsky{position:absolute;left:0;right:0;top:0;height:min(46vh,380px);z-index:0}
+.bsky svg{width:100%;height:100%;display:block}
+.bveil{position:absolute;left:0;right:0;top:0;height:min(46vh,380px);z-index:1;
+  background:linear-gradient(180deg,rgba(246,248,252,0) 34%,rgba(246,248,252,.86) 76%,var(--ground) 100%)}
+.bhead{position:relative;z-index:3;padding:clamp(16px,3.2vh,30px) 24px 0;text-align:center}
+.bhead h1{font:400 clamp(26px,4.2vh,34px)/1.14 var(--serif);letter-spacing:-.018em;margin:0 0 10px;text-wrap:balance}
+.bhead h1 b{font-weight:400;color:var(--blue)}
+.bhead p{font:400 14.5px/1.5 var(--sans);color:var(--mut);margin:0 auto;max-width:280px;text-wrap:pretty}
+.bbody{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;padding:0 20px;
+  margin-top:clamp(12px,2.4vh,24px);overflow-y:auto}
+.bfoot{position:relative;z-index:4;padding:14px 20px calc(16px + env(safe-area-inset-bottom))}
+.bcard{background:var(--surface);border-radius:20px;box-shadow:var(--sh2);padding:16px}
+.blabel{font:700 10.5px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--blue);
+  display:flex;align-items:center;gap:7px;margin-bottom:11px}
+.blabel svg{width:14px;height:14px;stroke:var(--blue);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bfield{display:flex;align-items:center;gap:10px;height:52px;padding:0 14px;border-radius:14px;
+  background:var(--ground);border:1px solid var(--line)}
+.bfield svg{width:17px;height:17px;stroke:var(--faint);fill:none;stroke-width:1.9;stroke-linecap:round;flex:none}
+.bfield input{flex:1;border:0;background:none;font:500 15px/1 var(--sans);color:var(--ink);outline:none;min-width:0}
+.bfield input::placeholder{color:var(--faint);font-weight:400}
+/* The inputs drop their own outline, so the box around them shows focus instead. */
+.bfield:focus-within,.askbox:focus-within{border-color:var(--blue-line);box-shadow:0 0 0 3px var(--blue-soft)}
+.bsub{font:500 12px/1 var(--sans);color:var(--faint);margin:14px 0 9px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{height:34px;padding:0 13px;border-radius:99px;background:var(--surface);border:1px solid var(--line);
+  font:600 13px/1 var(--sans);color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--blue-soft);border-color:var(--blue-line);color:var(--blue)}
+.privnote{text-align:center;margin-top:clamp(14px,2.6vh,26px)}
+.privnote .badgeicon{width:30px;height:30px;margin-bottom:8px}
+.privnote .badgeicon svg{width:15px;height:15px}
+.privnote b{display:block;font:600 12.5px/1.4 var(--sans);color:var(--mut)}
+.privnote i{display:block;font:400 12px/1.4 var(--sans);color:var(--faint);margin-top:2px;font-style:normal}
+
+/* the briefing sheet */
+.bsheet{background:var(--surface);border-radius:26px 26px 0 0;box-shadow:var(--sh3);
+  padding:8px 18px 18px;margin:0 -20px;flex:1;display:flex;flex-direction:column}
+.bgrip{width:36px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 14px}
+.btop{display:flex;align-items:flex-start;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--line-soft)}
+.btop .pin{width:22px;height:22px;flex:none;display:grid;place-items:center}
+.btop .pin svg{width:17px;height:17px;stroke:var(--blue);fill:none;stroke-width:1.9}
+.btop h2{font:600 21px/1.15 var(--sans);margin:0;letter-spacing:-.015em}
+.blive{display:flex;align-items:center;gap:6px;font:500 12px/1 var(--sans);color:var(--faint);margin-top:6px}
+.blive i{width:6px;height:6px;border-radius:50%;background:var(--good);flex:none}
+.blive span{line-height:1.4}
+.bgrade{margin-left:auto;text-align:right;flex:none}
+.bgrade b{display:block;font:700 24px/1 var(--sans);color:var(--good-ink);letter-spacing:-.02em}
+.bgrade i{display:block;font:600 11.5px/1 var(--sans);color:var(--good-ink);margin-top:5px;font-style:normal}
+.bgrade.mute b,.bgrade.mute i{color:var(--faint)}
+.bsum{display:flex;gap:11px;align-items:flex-start;padding:15px 0}
+.bsum .badgeicon{width:34px;height:34px;flex:none;background:var(--good-soft);margin:0}
+.bsum .badgeicon svg{stroke:var(--good-ink);width:16px;height:16px}
+.bsum.mute .badgeicon{background:var(--ground)}
+.bsum.mute .badgeicon svg{stroke:var(--faint)}
+.bsum p{margin:0;font:500 13.5px/1.45 var(--sans);color:var(--ink)}
+.bsum p i{display:block;color:var(--mut);font-weight:400;margin-top:3px;font-style:normal}
+.beyebrow{font:700 10.5px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:6px 0 11px}
+.binsight{display:flex;gap:11px;align-items:flex-start;margin-bottom:15px}
+.binsight .badgeicon{width:38px;height:38px;flex:none;margin:0}
+.binsight h4{margin:0;font:600 15px/1.3 var(--sans);letter-spacing:-.01em}
+.binsight p{margin:4px 0 0;font:400 13px/1.45 var(--sans);color:var(--mut)}
+.btiles{display:flex;gap:8px}
+.btile{flex:1;min-width:0;border:1px solid var(--line);border-radius:14px;padding:11px 10px;background:var(--surface)}
+.btile .badgeicon{width:30px;height:30px;margin:0 0 9px}
+.btile .badgeicon svg{width:15px;height:15px}
+.btile b{display:block;font:700 11px/1.2 var(--sans);letter-spacing:.02em}
+.btile em{display:block;font:600 13px/1.3 var(--sans);color:var(--ink);margin-top:4px;font-style:normal}
+.btile i{display:block;font:400 11px/1.3 var(--sans);color:var(--faint);font-style:normal;margin-top:2px}
+.btile.good b{color:var(--good-ink)}
+.btile.good .badgeicon{background:var(--good-soft)}
+.btile.good .badgeicon svg{stroke:var(--good-ink)}
+.btile.warn b{color:var(--warn)}
+.btile.warn .badgeicon{background:var(--warn-soft)}
+.btile.warn .badgeicon svg{stroke:var(--warn)}
+.btile.blue b{color:var(--blue)}
+.btile.blue .badgeicon{background:var(--blue-soft)}
+.btile.mute b{color:var(--faint)}
+.btile.mute .badgeicon{background:var(--ground)}
+.btile.mute .badgeicon svg{stroke:var(--faint)}
+
+/* the stamp. Deliberately not subtle, because this is safety copy rather than a booking. */
+.bstamp{display:flex;gap:8px;align-items:flex-start;margin-top:14px;padding:10px 12px;border-radius:12px;
+  background:var(--warn-soft);border:1px solid var(--warn-line)}
+.bstamp svg{width:15px;height:15px;stroke:var(--warn);fill:none;stroke-width:1.9;flex:none;margin-top:1px}
+.bstamp p{margin:0;font:500 11.5px/1.45 var(--sans);color:var(--warn)}
+
+/* screen 4 */
+.bdone{background:var(--surface);border-radius:20px;box-shadow:var(--sh2);padding:15px;display:flex;gap:12px;align-items:center}
+.bthumb{width:46px;height:46px;border-radius:14px;overflow:hidden;flex:none;background:var(--ground)}
+.bthumb svg{width:100%;height:100%;display:block}
+.bok{display:flex;gap:9px;align-items:flex-start;margin-top:13px;padding:11px 12px;border-radius:12px;background:var(--good-soft)}
+.bok svg{width:15px;height:15px;stroke:var(--good-ink);fill:none;stroke-width:2;flex:none;margin-top:1px}
+.bok p{margin:0;font:600 12.5px/1.4 var(--sans);color:var(--good-ink)}
+.bok p i{display:block;font-weight:400;margin-top:2px;font-style:normal}
+.bok.mute{background:var(--ground)}
+.bok.mute svg{stroke:var(--faint)}
+.bok.mute p{color:var(--mut)}
+.bskip{display:block;margin:12px auto 0;background:none;color:var(--faint);font:500 13px/1 var(--sans)}
+
+
+
+/* A welcome screen that scrolls has failed. On short phones drop the least important lines and
+   tighten the rhythm until the primary button is back above the fold. */
+@media (max-height:730px){
+  .heroinner p{font-size:14px;max-width:270px}
+  .floatcard{padding:14px 15px}
+  .floatcard h3{font-size:17.5px;margin-bottom:8px}
+  .fline{font-size:13px;margin-top:8px}
+  .ffoot{display:none}
+  .three p{font-size:11.5px}
+  .three .badgeicon{width:32px;height:32px;margin-bottom:7px}
+  .cta{height:54px}
+  .dots{margin-top:14px}
+  .skip{margin-top:10px}
+}
+@media (max-height:640px){
+  .floatcard.two{display:none}
+  .pill{display:none}
+  .eyebrow i{margin-top:7px}
+}
+
+/* ---------- header ---------- */
+header{padding:16px 20px 8px;display:flex;align-items:center;gap:10px;flex:none}
+.mark{width:29px;height:29px;border-radius:9px;flex:none;background:linear-gradient(150deg,#2563EB,#1E3A8A 70%);
+  display:grid;place-items:center}
+.mark svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.brand{font:700 16px/1 var(--sans);letter-spacing:-.02em}
+.brand span{color:var(--mut);font-weight:500}
+.hstat{margin-left:auto;font:500 11.5px/1.35 var(--sans);color:var(--faint);text-align:right}
+.hstat b{display:block;color:var(--mut);font-weight:600;margin-bottom:2px}
+main{flex:1;padding:0 20px 34px;display:flex;flex-direction:column}
+
+/* ---------- start ---------- */
+.hero{margin:12px 0 0}
+h1.big{font:400 31px/1.15 var(--serif);letter-spacing:-.015em;margin:0 0 11px;text-wrap:pretty}
+h1.big b{font-weight:400;color:var(--blue)}
+.sub{font:400 15px/1.5 var(--sans);color:var(--mut);margin:0 0 18px;text-wrap:pretty}
+.modechip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;background:var(--blue-soft);
+  border:1px solid var(--blue-line);color:var(--blue);font:600 11.5px/1 var(--sans);margin-bottom:14px}
+.modechip i{width:6px;height:6px;border-radius:50%;background:currentColor}
+textarea{width:100%;min-height:160px;resize:vertical;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:15px 16px;font:400 14.5px/1.55 var(--sans);color:var(--ink);box-shadow:var(--sh1)}
+textarea:focus{outline:none;border-color:var(--blue-line);box-shadow:0 0 0 3px var(--blue-soft)}
+textarea::placeholder{color:var(--faint)}
+.row{display:flex;gap:9px;margin-top:12px}
+.mic{width:100%;height:58px;border-radius:16px;background:var(--surface);border:1px solid var(--line);color:var(--ink);
+  font:600 15px/1 var(--sans);box-shadow:var(--sh1);margin-bottom:11px;display:flex;align-items:center;
+  justify-content:center;gap:10px;transition:transform .12s}
+.mic:active{transform:scale(.985)}
+.mic .rec{width:10px;height:10px;border-radius:50%;background:var(--faint)}
+.mic.on{border-color:var(--blue-line);background:var(--blue-soft);color:var(--blue)}
+.mic.on .rec{background:var(--bad);animation:pulse 1.1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.note{margin-top:13px;font:400 12.5px/1.5 var(--sans);color:var(--faint)}
+.note a{color:var(--mut);font-weight:600}
+
+/* ---------- reading ---------- */
+.reading{padding-top:30px}
+.orb{width:64px;height:64px;border-radius:50%;margin:0 auto 20px;background:conic-gradient(from 0deg,#2563EB,#60A5FA,#1E3A8A,#2563EB);
+  animation:spin 2.4s linear infinite;box-shadow:0 0 40px rgba(37,99,235,.28)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rtitle{text-align:center;font:400 21px/1.3 var(--serif);margin-bottom:20px}
+.heard{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:12px 13px;margin-bottom:8px;box-shadow:var(--sh1);
+  opacity:0;transform:translateY(7px);animation:pop .34s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes pop{to{opacity:1;transform:none}}
+.hwho{flex:none;width:26px;height:26px;border-radius:50%;color:#fff;display:grid;place-items:center;font:600 11px/1 var(--sans)}
+.htxt{font:600 13.5px/1.4 var(--sans)}
+.hq{font:400 12px/1.45 var(--serif);font-style:italic;color:var(--faint);margin-top:3px}
+
+/* ---------- deck ---------- */
+.decktop{display:flex;align-items:center;gap:9px;margin:12px 0 10px}
+.decktop h2{font:600 17px/1.2 var(--sans);margin:0;letter-spacing:-.01em}
+.who{font:700 10.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:#fff;border-radius:99px;padding:6px 9px}
+.count{margin-left:auto;font:600 12px/1 var(--sans);color:var(--blue);background:var(--blue-soft);border-radius:99px;padding:6px 10px}
+.bar{height:3px;border-radius:99px;background:var(--line-soft);overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--navy);transition:width .3s ease}
+#deck{position:relative;height:468px;flex:none}
+.card{position:absolute;inset:0;background:var(--surface);border-radius:22px;box-shadow:var(--sh2);
+  display:flex;flex-direction:column;overflow:hidden;will-change:transform;touch-action:pan-y;user-select:none}
+.card.behind1{transform:scale(.955) translateY(13px);opacity:.7;pointer-events:none;box-shadow:var(--sh1)}
+.card.behind2{transform:scale(.91) translateY(26px);opacity:.4;pointer-events:none;box-shadow:none}
+.scene{height:126px;flex:none;position:relative;overflow:hidden}
+.scene svg{position:absolute;inset:0;width:100%;height:100%}
+.kpill{position:absolute;left:14px;top:13px;padding:6px 10px;border-radius:99px;font:700 10px/1 var(--sans);
+  letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.94);color:var(--ink)}
+.cbody{padding:15px 17px 17px;display:flex;flex-direction:column;flex:1;min-height:0}
+.ctop{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px}
+.ctitle{font:600 21px/1.18 var(--sans);letter-spacing:-.015em;margin:0 0 3px}
+.cwhere{font:500 12.5px/1.3 var(--sans);color:var(--mut)}
+.grade{flex:none;font:700 14px/1 var(--sans);border-radius:10px;padding:8px 10px;background:var(--good-soft);color:var(--good-ink)}
+.grade.warn{background:var(--warn-soft);color:var(--warn)}
+.quote{background:var(--blue-soft);border-left:2.5px solid var(--blue);border-radius:0 12px 12px 0;padding:11px 13px;margin-bottom:11px}
+.qlbl{font:700 9.5px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.qtxt{font:400 13px/1.45 var(--serif);font-style:italic}
+.conflict .quote{background:var(--warn-soft);border-left-color:var(--warn)}
+.conflict .qlbl,.conflict .qtxt{color:var(--warn)}
+.cnote{font:400 13px/1.5 var(--sans);color:var(--mut);overflow:hidden}
+.cfoot{margin-top:auto;padding-top:12px;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:7px}
+.meta{font:500 11.5px/1 var(--sans);color:var(--mut);background:var(--ground);border-radius:8px;padding:7px 9px}
+.bookpill{margin-left:auto;font:600 11px/1 var(--sans);color:var(--navy);background:var(--blue-soft);border-radius:99px;padding:7px 10px}
+.stampL,.stampR{position:absolute;top:104px;font:800 15px/1 var(--sans);letter-spacing:.1em;padding:9px 13px;border-radius:11px;
+  border:2.5px solid;opacity:0;pointer-events:none;background:rgba(255,255,255,.95);z-index:3}
+.stampR{right:18px;color:var(--good-ink);border-color:var(--good-ink);transform:rotate(11deg)}
+.stampL{left:18px;color:var(--bad);border-color:var(--bad);transform:rotate(-11deg)}
+.acts{display:flex;gap:10px;margin-top:14px;align-items:center}
+.act{flex:1;height:58px;border-radius:16px;background:var(--surface);border:1px solid var(--line);
+  font:600 15px/1 var(--sans);box-shadow:var(--sh1);transition:transform .12s}
+.act:active{transform:scale(.97)}
+.act.no{color:var(--bad)}
+.act.yes{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 8px 20px -12px rgba(30,58,138,.7)}
+.undo{width:58px;height:58px;border-radius:16px;background:var(--surface);border:1px solid var(--line);
+  color:var(--mut);font:600 12px/1 var(--sans);box-shadow:var(--sh1)}
+.undo[disabled]{opacity:.35}
+.hint{text-align:center;font:400 12.5px/1 var(--sans);color:var(--faint);margin-top:12px}
+
+/* ---------- handoff ---------- */
+.mid{padding-top:40px;text-align:center}
+.bigface{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;
+  font:600 27px/1 var(--sans);color:#fff;box-shadow:var(--sh2)}
+.mid h2{font:400 26px/1.22 var(--serif);margin:0 0 10px}
+.mid p{font:400 15px/1.55 var(--sans);color:var(--mut);margin:0 auto 22px;max-width:300px;text-wrap:pretty}
+.ticker{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:5px;box-shadow:var(--sh1);
+  margin-bottom:20px;max-height:264px;overflow:hidden}
+.trow{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:11px;opacity:0;animation:pop .26s ease forwards}
+.tmark{flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font:700 11px/1 var(--sans);color:#fff}
+.tname{font:500 13.5px/1.3 var(--sans);text-align:left;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- overlap ---------- */
+.ovhead{display:flex;align-items:baseline;gap:8px;margin:22px 0 9px}
+.ovhead h3{font:600 15.5px/1.25 var(--sans);margin:0}
+.ovhead .n{margin-left:auto;font:600 12px/1 var(--sans);color:var(--faint)}
+.orow{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:12px 13px;margin-bottom:8px;box-shadow:var(--sh1)}
+.orow .t{font:600 14px/1.35 var(--sans);flex:1;min-width:0}
+.orow .w{font:400 12px/1.35 var(--sans);color:var(--faint);font-weight:400}
+.orow>div:first-child{flex:1;min-width:0}
+/* Overlap tags. Not .chip, which is the destination pill on the briefing screen. */
+.otag{flex:none;font:700 10px/1 var(--sans);letter-spacing:.07em;text-transform:uppercase;padding:6px 9px;border-radius:8px}
+.otag.both{background:var(--good-soft);color:var(--good-ink)}
+.otag.you{background:var(--blue-soft);color:var(--blue)}
+.otag.them{background:rgba(109,40,217,.10);color:#6D28D9}
+.otag.none{background:var(--line-soft);color:var(--faint)}
+
+/* ---------- plan ---------- */
+.mapwrap{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--sh1);margin-bottom:8px}
+.mapwrap svg{width:100%;display:block;border-radius:12px;background:linear-gradient(165deg,#EAF0FA,#F5F1EA)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 4px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 13px;box-shadow:var(--sh1)}
+.stat b{display:block;font:700 21px/1.1 var(--sans);letter-spacing:-.02em;margin-bottom:3px}
+.stat span{font:700 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.day{margin-top:18px}
+.dhead{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
+.dnum{font:700 10px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--blue)}
+.dline{flex:1;height:1px;background:var(--line)}
+.item{display:flex;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:15px;
+  padding:12px 13px;margin-bottom:8px;box-shadow:var(--sh1)}
+/* Built-in trips write "19:30". A live model may write "7:30 PM" or "Morning", so the column grows
+   a little and then wraps instead of running into the title. */
+.itime{font:700 12px/1.4 var(--sans);flex:none;min-width:44px;max-width:76px;overflow-wrap:anywhere}
+.ibody{min-width:0;flex:1}
+.ititle{font:600 14.5px/1.35 var(--sans);margin-bottom:2px}
+.iwhere{font:400 12px/1.4 var(--sans);color:var(--faint)}
+.icost{font:600 12.5px/1 var(--sans);color:var(--mut);align-self:center;flex:none}
+.iacts{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.ibtn{font:600 11.5px/1 var(--sans);padding:8px 10px;border-radius:9px;background:var(--ground);
+  border:1px solid var(--line);color:var(--mut)}
+.ibtn.book{background:var(--blue-soft);border-color:var(--blue-line);color:var(--navy)}
+.ibtn.done{background:var(--good);border-color:var(--good);color:#fff}
+.iref{font:500 11px/1 var(--sans);color:var(--faint);align-self:center}
+.sect{margin-top:26px}
+.sect h3{font:600 16px/1.25 var(--sans);margin:0 0 4px}
+.sect p{font:400 13.5px/1.5 var(--sans);color:var(--mut);margin:0 0 12px}
+.want{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.wtick{flex:none;width:18px;height:18px;border-radius:6px;background:var(--good-soft);color:var(--good-ink);
+  display:grid;place-items:center;font:700 10px/1 var(--sans);margin-top:2px}
+.wtick.firm{background:var(--blue-soft);color:var(--blue)}
+.wtxt{font:600 13.5px/1.4 var(--sans)}
+.wq{font:400 12px/1.45 var(--serif);font-style:italic;color:var(--faint);margin-top:3px}
+.empty{text-align:center;padding:42px 20px;color:var(--mut);font:400 15px/1.55 var(--sans)}
+
+/* ---------- live, in trip ---------- */
+.greet{margin:10px 0 16px}
+.greet h1{font:400 29px/1.16 var(--serif);letter-spacing:-.015em;margin:0 0 6px;text-wrap:pretty}
+.greet h1 b{font-weight:400;color:var(--blue)}
+.greet .where{font:500 14px/1.4 var(--sans);color:var(--mut)}
+.wx{display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:14px 15px;box-shadow:var(--sh1);margin-bottom:10px}
+.wxicon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--blue-soft)}
+.wxicon svg{width:24px;height:24px;stroke:var(--blue);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.wxicon.wet{background:rgba(37,99,235,.15)}
+.wxtemp{font:700 24px/1 var(--sans);letter-spacing:-.02em}
+.wxtext{font:500 13px/1.4 var(--sans);color:var(--mut);margin-top:3px}
+.wxrain{margin-left:auto;text-align:right;font:600 12px/1.3 var(--sans);color:var(--blue)}
+.wxrain span{display:block;font-weight:500;color:var(--faint);font-size:11px;margin-top:2px}
+.adapt{background:var(--warn-soft);border:1px solid var(--warn-line);border-radius:16px;padding:14px 15px;margin-bottom:10px}
+.adapt h4{font:700 11px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--warn);margin:0 0 8px}
+.adapt p{font:500 14px/1.45 var(--sans);color:var(--ink);margin:0 0 12px}
+.adapt .arow{display:flex;gap:8px}
+.adapt button{flex:1;height:44px;border-radius:11px;font:600 13.5px/1 var(--sans)}
+.adapt .yes{background:var(--warn);color:#fff}
+.adapt .no{background:var(--surface);border:1px solid var(--line);color:var(--mut)}
+.daystrip{display:flex;gap:7px;overflow-x:auto;padding:2px 0 4px;margin-bottom:14px;scrollbar-width:none}
+.daystrip::-webkit-scrollbar{display:none}
+.daypill{flex:none;min-width:58px;border-radius:13px;border:1px solid var(--line);background:var(--surface);
+  padding:9px 10px;text-align:center;box-shadow:var(--sh1)}
+.daypill b{display:block;font:700 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.daypill i{display:block;font:700 15px/1 var(--sans);font-style:normal;color:var(--ink)}
+.daypill.on{background:var(--navy);border-color:var(--navy)}
+.daypill.on b{color:rgba(255,255,255,.72)}
+.daypill.on i{color:#fff}
+.daypill.wet:not(.on){border-color:var(--warn-line);background:var(--warn-soft)}
+.asktray{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(246,248,252,0),var(--ground) 34%);
+  padding:16px 0 4px;margin-top:18px}
+.askbox{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:7px 7px 7px 15px;box-shadow:var(--sh2)}
+.askbox input{flex:1;border:none;outline:none;background:none;font:400 14.5px/1.4 var(--sans);color:var(--ink);min-width:0}
+.askbox input::placeholder{color:var(--faint)}
+.asksend{width:42px;height:42px;border-radius:12px;background:var(--navy);display:grid;place-items:center;flex:none}
+.asksend svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.answer{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:13px 14px;
+  box-shadow:var(--sh1);margin-bottom:10px;font:400 14px/1.5 var(--sans)}
+.answer b{display:block;font:700 10px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:7px}
+
+/* ---------- sheet ---------- */
+.sheetbg{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:70;opacity:0;pointer-events:none;transition:opacity .22s}
+.sheetbg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,102%);width:100%;max-width:430px;z-index:71;
+  background:var(--surface);border-radius:26px 26px 0 0;padding:10px 20px 26px;box-shadow:var(--sh3);
+  transition:transform .28s cubic-bezier(.2,.8,.25,1)}
+.sheet.on{transform:translate(-50%,0)}
+.grab{width:38px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 16px}
+.vhead{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.vmark{font:700 14px/1 var(--sans);letter-spacing:-.02em;padding:8px 11px;border-radius:9px;color:#fff}
+.demo{margin-left:auto;font:700 9.5px/1 var(--sans);letter-spacing:.12em;padding:6px 9px;border-radius:7px;
+  background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn-line)}
+.sheet h3{font:600 21px/1.2 var(--sans);letter-spacing:-.015em;margin:0 0 3px}
+.sheet .swhere{font:500 13px/1.3 var(--sans);color:var(--mut);margin-bottom:15px}
+.vrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line-soft);
+  font:400 14px/1.3 var(--sans);color:var(--mut)}
+.vrow b{font-weight:600;color:var(--ink)}
+.vrow.total{border-bottom:none;padding-top:13px;font-size:16px}
+.fine{font:400 11.5px/1.5 var(--sans);color:var(--faint);margin:11px 0 0;text-align:center}
+.conf{text-align:center;padding:12px 0 4px}
+.confmark{width:60px;height:60px;border-radius:50%;background:var(--good-soft);color:var(--good-ink);margin:0 auto 15px;
+  display:grid;place-items:center;font:700 26px/1 var(--sans)}
+.confref{font:700 15px/1 var(--sans);letter-spacing:.08em;background:var(--ground);border-radius:10px;padding:12px 14px;
+  display:inline-block;margin-top:9px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ink);color:#fff;
+  border-radius:14px;padding:13px 17px;font:500 13.5px/1 var(--sans);box-shadow:var(--sh3);z-index:80;opacity:0;transition:opacity .2s}
+.toast.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- INTRO: full-bleed welcome -->
+  <section id="vIntro">
+    <div class="heroimg">
+      <svg viewBox="0 0 430 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#BFD8F5"/><stop offset=".42" stop-color="#DCE9FA"/>
+            <stop offset=".72" stop-color="#EFE7DC"/><stop offset="1" stop-color="#F6F8FC"/>
+          </linearGradient>
+          <radialGradient id="sun" cx="76%" cy="20%" r="34%">
+            <stop offset="0" stop-color="#FFF4E0" stop-opacity=".95"/>
+            <stop offset="1" stop-color="#FFF4E0" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="430" height="560" fill="url(#sky)"/>
+        <rect width="430" height="560" fill="url(#sun)"/>
+        <circle cx="327" cy="112" r="34" fill="#FFF8EC" opacity=".85"/>
+        <!-- far range -->
+        <path d="M0 372 L54 322 L96 350 L150 296 L206 348 L252 312 L308 356 L360 318 L430 366 V560 H0 Z"
+              fill="#9DB6D8" opacity=".42"/>
+        <!-- mid range -->
+        <path d="M0 408 L62 360 L118 396 L176 344 L232 392 L292 356 L352 398 L430 362 V560 H0 Z"
+              fill="#7E9AC4" opacity=".42"/>
+        <!-- a landmark, so it reads as somewhere rather than nowhere. Kept right of the text column. -->
+        <g opacity=".55" transform="translate(100 30)">
+          <path d="M300 300 L306 246 L312 300 Z" fill="#B85C3C"/>
+          <path d="M292 336 L306 262 L320 336 Z" fill="#C96844"/>
+          <rect x="303" y="232" width="6" height="18" rx="2" fill="#B85C3C"/>
+        </g>
+        <!-- near range -->
+        <path d="M0 448 L70 404 L134 442 L196 396 L262 440 L330 402 L392 438 L430 414 V560 H0 Z"
+              fill="#5C7BA8" opacity=".38"/>
+        <!-- cloud band -->
+        <path d="M-20 452 Q 60 424 140 452 T 300 448 T 460 460 V560 H-20 Z" fill="#F2F5FA" opacity=".82"/>
+        <path d="M-20 486 Q 74 462 168 488 T 330 482 T 460 496 V560 H-20 Z" fill="#F8FAFD" opacity=".92"/>
+      </svg>
+    </div>
+    <div class="heroveil"></div>
+
+    <div class="heroinner">
+      <div class="badgeicon"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.4 3.4 8.2 8 9 4.6-.8 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <h1>Travel is better<br>when you<br><b>talk about it.</b></h1>
+      <p>Haii listens to the conversation you're already having and turns it into a trip.</p>
+    </div>
+
+    <div class="floatzone">
+      <div class="floatcard two"></div>
+      <div class="floatcard">
+        <div class="fbrand">
+          <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.4 3.4 8.2 8 9 4.6-.8 8-4.6 8-9V6l-8-3Z"/></svg>
+          <span class="fname">Haii heard</span>
+          <span class="fgrade">A</span>
+        </div>
+        <h3>Erawan Falls, Thailand</h3>
+        <span class="pill"><i></i>Maya's one non negotiable</span>
+        <p class="fline">“I want to see the waterfalls. That's my one non negotiable.”</p>
+        <div class="ffoot">from your kitchen table · <b>her exact words</b></div>
+      </div>
+    </div>
+
+    <div class="lower">
+      <div class="eyebrow">No prompts. Just talking.<i></i></div>
+      <div class="three">
+        <div><div class="badgeicon"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10a7 7 0 0 1-14 0M12 17v4"/></svg></div><p>It listens,<br>you don't type</p></div>
+        <div><div class="badgeicon"><svg viewBox="0 0 24 24"><path d="M7 8h10M7 12h6"/><path d="M21 12a9 9 0 1 1-3.2-6.9"/></svg></div><p>Quotes the words<br>you actually said</p></div>
+        <div><div class="badgeicon"><svg viewBox="0 0 24 24"><path d="M16 3.1a4 4 0 0 1 0 7.8M8 3.1a4 4 0 0 0 0 7.8"/><path d="M2 21v-1a5 5 0 0 1 5-5h10a5 5 0 0 1 5 5v1"/></svg></div><p>You both swipe,<br>it finds the overlap</p></div>
+      </div>
+      <div class="introbtm">
+        <button class="cta" id="introGo">Let's plan something
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="skip" id="introSkip">See a sample safety briefing</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Sample safety briefing, three screens, reached from the secondary link on #vIntro. -->
+  <section id="vBrief2" class="bscreen">
+    <div class="bsky" id="sky2"></div>
+    <div class="bveil"></div>
+    <div class="bhead">
+      <h1>Where are<br>you <b>headed?</b></h1>
+      <p>See a sample safety briefing for a destination.</p>
+    </div>
+    <div class="bbody">
+      <div class="bcard">
+        <div class="blabel"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>Your destination</div>
+        <div class="bfield">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="destq" aria-label="Destination" placeholder="Search for a city or country" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="bsub">Try one of these</div>
+        <div class="chips" id="destChips"></div>
+      </div>
+      <div class="privnote">
+        <div class="badgeicon"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <b>We don't store your search.</b>
+        <i>It only picks which sample to show.</i>
+      </div>
+    </div>
+    <div class="bfoot">
+      <button class="cta" id="b2go">Continue</button>
+      <div class="dots"><i class="on"></i><i></i><i></i></div>
+      <button class="bskip" id="b2skip">Skip the briefing</button>
+    </div>
+  </section>
+
+  <section id="vBrief3" class="bscreen">
+    <div class="bsky" id="sky3"></div>
+    <div class="bveil"></div>
+    <div class="bhead">
+      <h1 id="b3h">A sample <b>briefing.</b></h1>
+      <p>Handwritten for this demo. Not live intelligence.</p>
+    </div>
+    <div class="bbody"><div class="bsheet" id="b3sheet"></div></div>
+    <div class="bfoot">
+      <button class="cta" id="b3go">Looks good</button>
+      <div class="dots"><i></i><i class="on"></i><i></i></div>
+      <button class="bskip" id="b3back">Change destination</button>
+    </div>
+  </section>
+
+  <section id="vBrief4" class="bscreen">
+    <div class="bsky" id="sky4"></div>
+    <div class="bveil"></div>
+    <div class="bhead">
+      <h1 id="b4h">That was the <b>sample.</b></h1>
+      <p>Briefings are handwritten for a few places. Next, plan a trip from a conversation.</p>
+    </div>
+    <div class="bbody" id="b4body"></div>
+    <div class="bfoot">
+      <button class="cta" id="b4go">Plan a trip</button>
+      <div class="dots"><i></i><i></i><i class="on"></i></div>
+    </div>
+  </section>
+
+  <header id="hdr" class="hide">
+    <div class="mark"><svg viewBox="0 0 24 24"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></div>
+    <div class="brand">Haii <span>Trips</span></div>
+    <div class="hstat" id="hstat"></div>
+  </header>
+  <main id="mainWrap" class="hide">
+    <div class="bstamp hide" id="liveFail" role="status"></div>
+    <section id="vStart">
+      <div class="hero">
+        <div class="modechip"><i></i><span id="modeText">checking</span></div>
+        <h1 class="big">Tell me about the trip, <b>out loud.</b></h1>
+        <p class="sub">Talk the way you already do. Paste a conversation if you'd rather.</p>
+        <button class="mic" id="mic"><span class="rec"></span><span id="micLbl">Start listening</span></button>
+        <textarea id="ta" aria-label="Conversation" placeholder="Or paste a conversation. You and whoever you're travelling with, talking about where you want to go."></textarea>
+        <div class="row"><button class="cta" id="go" style="height:56px">Make the trip</button></div>
+        <div class="row">
+          <button class="ghost" id="useSample" style="flex:1;height:48px">Thailand</button>
+          <button class="ghost" id="useSample2" style="flex:1;height:48px">Road trip</button>
+        </div>
+        <p class="note" id="startNote"></p>
+        <p class="note"><a href="https://github.com/ardaasaroglu/haii-trips" target="_blank" rel="noopener">Source on GitHub</a></p>
+      </div>
+    </section>
+
+    <section id="vRead" class="hide">
+      <div class="reading">
+        <div class="orb"></div>
+        <div class="rtitle" id="rtitle">Listening to the conversation</div>
+        <div id="heard"></div>
+      </div>
+    </section>
+
+    <section id="vDeck" class="hide">
+      <div class="decktop">
+        <span class="who" id="deckWho"></span>
+        <h2 id="deckTitle">your turn</h2>
+        <div class="count" id="deckCount"></div>
+      </div>
+      <div class="bar"><i id="deckBar" style="width:0%"></i></div>
+      <div id="deck"></div>
+      <div class="acts">
+        <button class="act no" id="bNo">Not for us</button>
+        <button class="undo" id="bUndo" disabled>Undo</button>
+        <button class="act yes" id="bYes">Yes, in</button>
+      </div>
+      <p class="hint">Drag the card, or use the buttons</p>
+    </section>
+
+    <section id="vHand" class="hide"></section>
+    <section id="vOverlap" class="hide"></section>
+    <section id="vPlan" class="hide"></section>
+    <section id="vLive" class="hide"></section>
+  </main>
+</div>
+<div class="sheetbg" id="sheetBg"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* Standalone build. No server: fetch is stubbed and state lives in memory.
+   Both built-in trips are baked in, so the road trip demo works offline too. */
+window.HAII_TRIPS_STANDALONE = true;
+(function(){
+  var TRIPS = {"thailand":{"title":"Thailand, eight days","destination":"Thailand","days":8,"people":["Maya","Tom"],"mode":"sample","partner":{"name":"Maya","picks":["c0","c1","c2","c3","c4","c5","c6"],"skips":["c7","c8","c9"]},"wants":[{"text":"See the waterfalls","who":"Maya","quote":"I want to see the waterfalls. That's my one non negotiable.","firm":true},{"text":"Eat where locals eat, not tourist food","who":"Tom","quote":"Street food, night markets, the places locals actually go.","firm":true},{"text":"One splurge dinner","who":"Maya","quote":"I'd love one really nice dinner somewhere, just one","firm":false},{"text":"Not a trip spent in transit","who":"Tom","quote":"I really don't want to spend the whole trip in transit.","firm":true},{"text":"Quiet Wednesday morning for a work call","who":"Tom","quote":"I've got a work call on the Wednesday, so I need decent wifi and a quiet hour","firm":true},{"text":"A cooking class, green curry","who":"Maya","quote":"I want to do a cooking class, I've always wanted to learn to make a proper green curry.","firm":false},{"text":"An old temple complex up north","who":"Tom","quote":"there's a proper old temple complex up north that's worth the trip","firm":false},{"text":"Quiet beach at the end, not a party island","who":"Maya","quote":"Somewhere quiet though, not a party island. I want to actually relax","firm":true},{"text":"Nothing before 10am","who":"Tom","quote":"can we not book anything before ten in the morning? I'm not doing 6am starts on holiday.","firm":true},{"text":"Ethical elephant sanctuary","who":"Maya","quote":"I want an elephant sanctuary, an ethical one, not the riding places.","firm":true},{"text":"Mid range budget, about two thousand each","who":"Tom","quote":"Mid range. Nice but not stupid. Maybe two thousand each all in.","firm":false}],"cards":[{"kind":"do","title":"Erawan Falls","lat":14.37,"lng":99.14,"scene":"water","where":"Kanchanaburi","day":2,"time":"10:30","cost":"$9","why":"Maya said the waterfalls were her one non negotiable","quote":"I want to see the waterfalls. That's my one non negotiable.","note":"Seven tiers, emerald pools you can swim in. Go early-ish, it fills up after noon.","book":"Viator","ride":"Taxi","rideCost":"$14","id":"c0","decision":""},{"kind":"food","title":"Chang Phueak night market","lat":18.8,"lng":98.98,"scene":"food","where":"Chiang Mai","day":3,"time":"19:00","cost":"$6","why":"Tom wanted the places locals actually go","quote":"Street food, night markets, the places locals actually go.","note":"The cowboy hat lady's khao kha moo is the one worth queueing for.","book":"","ride":"Grab","rideCost":"$3","id":"c1","decision":""},{"kind":"do","title":"Elephant Nature Park","lat":19.19,"lng":98.85,"scene":"wild","where":"Chiang Mai","day":4,"time":"10:00","cost":"$80","why":"Maya asked for ethical, no riding","quote":"an ethical one, not the riding places","note":"Rescue sanctuary, no riding, no bathing. Full day including transfer.","book":"GetYourGuide","ride":"Transfer","rideCost":"free","id":"c2","decision":""},{"kind":"do","title":"Thai cooking class, half day","lat":18.79,"lng":98.99,"scene":"food","where":"Chiang Mai","day":5,"time":"10:00","cost":"$35","why":"Maya wanted to learn green curry","quote":"I've always wanted to learn to make a proper green curry.","note":"Market tour first, then six dishes. Green curry is on the standard menu.","book":"GetYourGuide","ride":"Grab","rideCost":"$4","id":"c3","decision":""},{"kind":"place","title":"Wat Phra That Doi Suthep","lat":18.8,"lng":98.92,"scene":"temple","where":"Chiang Mai","day":5,"time":"16:30","cost":"$2","why":"Tom heard about an old temple complex up north","quote":"there's a proper old temple complex up north that's worth the trip","note":"306 steps up. Late afternoon light over the city is the reason to go then.","book":"","ride":"Songthaew","rideCost":"$6","id":"c4","decision":""},{"kind":"stay","title":"Quiet beach base, Koh Lanta","lat":7.62,"lng":99.04,"scene":"beach","where":"Krabi","day":6,"time":"","cost":"$95/night","why":"Maya wanted quiet, explicitly not a party island","quote":"Somewhere quiet though, not a party island.","note":"Long beaches, low rise, no full moon party. The calm alternative to Phi Phi.","book":"Booking.com","ride":"Ferry","rideCost":"$22","id":"c5","decision":""},{"kind":"food","title":"Dinner at Le Du","lat":13.72,"lng":100.53,"scene":"food","where":"Bangkok","day":7,"time":"19:30","cost":"$110pp","why":"The one splurge dinner Maya asked for","quote":"I'd love one really nice dinner somewhere, just one, we can splurge on that.","note":"Michelin starred, modern Thai. Book well ahead, it goes.","book":"OpenTable","ride":"Grab","rideCost":"$5","id":"c6","decision":""},{"kind":"move","title":"Keep Wednesday morning clear","lat":18.79,"lng":98.98,"scene":"hold","where":"wherever you are","day":3,"time":"09:00","cost":"free","why":"Tom has a work call and asked for a quiet hour","quote":"I've got a work call on the Wednesday, so I need decent wifi","note":"Nothing scheduled before 12:00. Check the hotel wifi before you book.","book":"","ride":"","rideCost":"","id":"c7","decision":""},{"kind":"place","title":"Pai, two nights","lat":19.36,"lng":98.44,"scene":"mountain","where":"Mae Hong Son","day":6,"time":"","cost":"$40/night","why":"Nobody asked for this one","quote":"","note":"762 curves to get there and it is a full day of transit each way.","note2":"conflict","book":"Booking.com","ride":"Minibus","rideCost":"$9","id":"c8","decision":""},{"kind":"do","title":"Full Moon Party, Koh Phangan","lat":9.73,"lng":100.01,"scene":"beach","where":"Koh Phangan","day":7,"time":"22:00","cost":"$30","why":"Nobody asked for this one","quote":"","note":"This is the opposite of what Maya asked for. It is here so you have something to swipe away.","note2":"conflict","book":"Viator","ride":"Ferry","rideCost":"$18","id":"c9","decision":""}],"source":"Maya: Okay so Thailand. I've been thinking about this for months.\nTom: Same. How long do we have, realistically?\nMaya: Eight days if we fly out on the Monday. I don't want to be rushing between cities the whole time though.\nTom: Agreed. I really don't want to spend the whole trip in transit.\nMaya: I want to see the waterfalls. That's my one non negotiable. Erawan or the ones near Chiang Mai, I don't mind which.\nTom: Fine by me. I want to eat properly though, not tourist stuff. Street food, night markets, the places locals actually go.\nMaya: Obviously. And I'd love one really nice dinner somewhere, just one, we can splurge on that.\nTom: Deal. One thing, I've got a work call on the Wednesday, so I need decent wifi and a quiet hour that morning.\nMaya: We can work around that. Wednesday is a slow day then.\nTom: I also heard there's a proper old temple complex up north that's worth the trip. Someone at the hotel mentioned it.\nMaya: Ooh. And I want to do a cooking class, I've always wanted to learn to make a proper green curry.\nTom: That's a good shout. What about the beach, are we doing beach?\nMaya: A couple of days at the end. Somewhere quiet though, not a party island. I want to actually relax before we fly back.\nTom: Quiet beach, yes. And can we not book anything before ten in the morning? I'm not doing 6am starts on holiday.\nMaya: Absolutely not doing 6am starts. Budget wise, what are we thinking?\nTom: Mid range. Nice but not stupid. Maybe two thousand each all in.\nMaya: That works. Oh and I want an elephant sanctuary, an ethical one, not the riding places.","weather":[null,{"date":"2026-10-15","code":95,"max":28,"min":23,"rain":91,"text":"Thunderstorms","icon":"storm","wet":true,"where":"Kanchanaburi"},{"date":"2026-10-16","code":51,"max":31,"min":23,"rain":37,"text":"Drizzle","icon":"rain","wet":true,"where":"Chiang Mai"},{"date":"2026-10-17","code":51,"max":29,"min":20,"rain":73,"text":"Drizzle","icon":"rain","wet":true,"where":"Chiang Mai"},{"date":"2026-10-18","code":51,"max":31,"min":23,"rain":22,"text":"Drizzle","icon":"rain","wet":true,"where":"Chiang Mai"},{"date":"2026-10-19","code":80,"max":29,"min":25,"rain":99,"text":"Rain showers","icon":"rain","wet":true,"where":"Krabi"},{"date":"2026-10-20","code":95,"max":31,"min":24,"rain":69,"text":"Thunderstorms","icon":"storm","wet":true,"where":"Bangkok"}],"partnerDone":false},"utah":{"title":"Utah, five days off grid","destination":"Utah","days":5,"people":["Priya","Maya"],"mode":"sample","partner":{"name":"Priya","picks":["c0","c1","c2","c3","c5","c6","c7"],"skips":["c4","c8","c9"]},"wants":[{"text":"Car camp, no hotels","who":"Maya","quote":"I don't want to book hotels, I want to car camp.","firm":true},{"text":"Free campsites and service roads only","who":"Maya","quote":"free campsites and service roads. No campgrounds with a check-in desk.","firm":true},{"text":"Bear mace on the kit list","who":"Maya","quote":"Bear mace, yes. Put that on the list.","firm":true},{"text":"A temperature rated sleeping bag","who":"Maya","quote":"I need a proper sleeping bag, it's going to be near freezing at altitude.","firm":true},{"text":"One night with no light pollution","who":"Maya","quote":"somewhere with genuinely no light pollution. Stargazing is the whole point for me.","firm":true},{"text":"A real hike, half a day","who":"Maya","quote":"a real hike. Not a walk, a hike. Half a day at least.","firm":false},{"text":"One proper meal in a town","who":"Priya","quote":"Can we do one proper meal though? Five days of camp food is a lot.","firm":false},{"text":"No more than four hours driving a day","who":"Maya","quote":"no driving more than four hours in a day, I don't want to just sit in the car.","firm":true},{"text":"A shower at some point","who":"Priya","quote":"I'd like a shower at some point, let's be honest.","firm":false}],"cards":[{"kind":"stay","title":"Dispersed camping, Dixie National Forest","lat":37.72,"lng":-112.72,"scene":"mountain","ride":"Drive","rideCost":"free","where":"Utah","day":1,"time":"17:00","cost":"free","why":"Maya wanted free sites, no check-in desk","quote":"free campsites and service roads. No campgrounds with a check-in desk.","note":"Forest service roads, 14 day limit, no permit needed. Arrive before dark to find a flat pitch.","note2":"","book":"","id":"c0","decision":""},{"kind":"do","title":"REI Salt Lake City, kit stop","lat":40.76,"lng":-111.9,"scene":"city","ride":"Drive","rideCost":"free","where":"Salt Lake City","day":1,"time":"10:00","cost":"$180","why":"Maya needs a bag rated for altitude, and the bear mace","quote":"I need a proper sleeping bag, it's going to be near freezing at altitude.","note":"20F rated bag, bear spray, and a spare gas canister.","note2":"","book":"","id":"c1","decision":""},{"kind":"place","title":"Natural Bridges Dark Sky Park","lat":37.6,"lng":-110.01,"scene":"mountain","ride":"Drive","rideCost":"free","where":"Utah","day":4,"time":"21:30","cost":"$20","why":"Maya said stargazing was the whole point","quote":"somewhere with genuinely no light pollution. Stargazing is the whole point for me.","note":"First place on earth certified dark sky. New moon week is the one to aim for.","note2":"","book":"","id":"c2","decision":""},{"kind":"do","title":"Angels Landing, half day","lat":37.27,"lng":-112.95,"scene":"mountain","ride":"Shuttle","rideCost":"$3","where":"Zion","day":2,"time":"10:00","cost":"$6","why":"Maya asked for a hike, not a walk","quote":"a real hike. Not a walk, a hike. Half a day at least.","note":"Permit by lottery, chains on the final half mile. Five hours round trip.","note2":"","book":"Recreation.gov","id":"c3","decision":""},{"kind":"stay","title":"Under Canvas Moab, one night","lat":38.57,"lng":-109.55,"scene":"mountain","ride":"Drive","rideCost":"free","where":"Moab","day":4,"time":"16:00","cost":"$249","why":"Nobody asked for this one","quote":"","note":"Glamping with a check-in desk, which is the exact thing Maya ruled out.","note2":"conflict","book":"Booking.com","id":"c4","decision":""},{"kind":"food","title":"Hell's Backbone Grill","lat":37.79,"lng":-111.42,"scene":"food","ride":"Drive","rideCost":"free","where":"Boulder, Utah","day":3,"time":"18:30","cost":"$42","why":"Priya wanted one proper meal","quote":"Can we do one proper meal though? Five days of camp food is a lot.","note":"Farm to table in the middle of nowhere. Book ahead, it is the only good food for an hour.","note2":"","book":"OpenTable","id":"c5","decision":""},{"kind":"move","title":"Shower stop, Moab rec centre","lat":38.57,"lng":-109.55,"scene":"city","ride":"Drive","rideCost":"free","where":"Moab","day":5,"time":"12:00","cost":"$7","why":"Priya asked for a shower, honestly","quote":"I'd like a shower at some point, let's be honest.","note":"Day pass gets you a hot shower and a pool. The unglamorous one that saves the trip.","note2":"","book":"","id":"c6","decision":""},{"kind":"place","title":"Scenic Byway 12, driving day","lat":37.85,"lng":-111.6,"scene":"mountain","ride":"Drive","rideCost":"free","where":"Utah","day":3,"time":"13:00","cost":"free","why":"Keeps the day inside Maya's four hour limit","quote":"no driving more than four hours in a day, I don't want to just sit in the car.","note":"Three and a half hours with stops. One of the best drives in the country.","note2":"","book":"","id":"c7","decision":""},{"kind":"do","title":"Antelope Canyon guided tour","lat":36.86,"lng":-111.37,"scene":"wild","ride":"Drive","rideCost":"free","where":"Page, Arizona","day":5,"time":"08:00","cost":"$90","why":"Nobody asked for this one","quote":"","note":"A six hour detour, which breaks Maya's four hour driving limit.","note2":"conflict","book":"GetYourGuide","id":"c8","decision":""},{"kind":"food","title":"Camp cook kit, five dinners","lat":40.76,"lng":-111.9,"scene":"food","ride":"","rideCost":"","where":"bought in SLC","day":1,"time":"11:00","cost":"$60","why":"Five days off grid needs feeding","quote":"I don't want to book hotels, I want to car camp.","note":"Dry bags, one pot meals, and coffee that does not taste like sadness.","note2":"","book":"","id":"c9","decision":""}],"source":"Maya: Right, the road trip. I want to actually disconnect on this one.\nPriya: Same. How long are we out for?\nMaya: Five days. Utah and back. I don't want to book hotels, I want to car camp.\nPriya: Free sites? I've done the service road thing before, it's fine if you know where to look.\nMaya: Exactly, free campsites and service roads. No campgrounds with a check-in desk.\nPriya: We'll need to be careful about bears depending where we end up.\nMaya: Bear mace, yes. Put that on the list. And I need a proper sleeping bag, it's going to be near freezing at altitude.\nPriya: REI will sort you out. Temperature rated, not a summer bag.\nMaya: One night I want to be somewhere with genuinely no light pollution. Stargazing is the whole point for me.\nPriya: Dark sky park then. There are a few out that way.\nMaya: And a real hike. Not a walk, a hike. Half a day at least.\nPriya: Good. Can we do one proper meal though? Five days of camp food is a lot.\nMaya: One town dinner, agreed. And no driving more than four hours in a day, I don't want to just sit in the car.\nPriya: Four hours max. And I'd like a shower at some point, let's be honest.","weather":[{"date":"2026-10-14","code":73,"max":-1,"min":-4,"rain":34,"text":"Snow","icon":"snow","wet":true,"where":"Utah"},{"date":"2026-10-15","code":1,"max":18,"min":5,"rain":2,"text":"Mostly sunny","icon":"sun","wet":false,"where":"Zion"},{"date":"2026-10-16","code":0,"max":16,"min":7,"rain":0,"text":"Clear","icon":"sun","wet":false,"where":"Boulder, Utah"},{"date":"2026-10-17","code":3,"max":16,"min":8,"rain":6,"text":"Overcast","icon":"cloud","wet":false,"where":"Utah"},{"date":"2026-10-18","code":3,"max":21,"min":13,"rain":8,"text":"Overcast","icon":"cloud","wet":false,"where":"Moab"}],"partnerDone":false}};
+  var SAMPLES = [{"id":"thailand","label":"Thailand, two of you","text":"Maya: Okay so Thailand. I've been thinking about this for months.\nTom: Same. How long do we have, realistically?\nMaya: Eight days if we fly out on the Monday. I don't want to be rushing between cities the whole time though.\nTom: Agreed. I really don't want to spend the whole trip in transit.\nMaya: I want to see the waterfalls. That's my one non negotiable. Erawan or the ones near Chiang Mai, I don't mind which.\nTom: Fine by me. I want to eat properly though, not tourist stuff. Street food, night markets, the places locals actually go.\nMaya: Obviously. And I'd love one really nice dinner somewhere, just one, we can splurge on that.\nTom: Deal. One thing, I've got a work call on the Wednesday, so I need decent wifi and a quiet hour that morning.\nMaya: We can work around that. Wednesday is a slow day then.\nTom: I also heard there's a proper old temple complex up north that's worth the trip. Someone at the hotel mentioned it.\nMaya: Ooh. And I want to do a cooking class, I've always wanted to learn to make a proper green curry.\nTom: That's a good shout. What about the beach, are we doing beach?\nMaya: A couple of days at the end. Somewhere quiet though, not a party island. I want to actually relax before we fly back.\nTom: Quiet beach, yes. And can we not book anything before ten in the morning? I'm not doing 6am starts on holiday.\nMaya: Absolutely not doing 6am starts. Budget wise, what are we thinking?\nTom: Mid range. Nice but not stupid. Maybe two thousand each all in.\nMaya: That works. Oh and I want an elephant sanctuary, an ethical one, not the riding places."},{"id":"utah","label":"Utah road trip, off grid","text":"Maya: Right, the road trip. I want to actually disconnect on this one.\nPriya: Same. How long are we out for?\nMaya: Five days. Utah and back. I don't want to book hotels, I want to car camp.\nPriya: Free sites? I've done the service road thing before, it's fine if you know where to look.\nMaya: Exactly, free campsites and service roads. No campgrounds with a check-in desk.\nPriya: We'll need to be careful about bears depending where we end up.\nMaya: Bear mace, yes. Put that on the list. And I need a proper sleeping bag, it's going to be near freezing at altitude.\nPriya: REI will sort you out. Temperature rated, not a summer bag.\nMaya: One night I want to be somewhere with genuinely no light pollution. Stargazing is the whole point for me.\nPriya: Dark sky park then. There are a few out that way.\nMaya: And a real hike. Not a walk, a hike. Half a day at least.\nPriya: Good. Can we do one proper meal though? Five days of camp food is a lot.\nMaya: One town dinner, agreed. And no driving more than four hours in a day, I don't want to just sit in the car.\nPriya: Four hours max. And I'd like a shower at some point, let's be honest."}];
+  var BRIEFS = {"tokyo":{"name":"Tokyo","country":"Japan","grade":"A-","mood":"Calm overall","tint":"city","summary":"Conditions are calm across most of the city.","summarySub":"Keep an eye on crowded areas.","headline":"Watch your phone in crowds","detail":"Pickpocketing reported in Shibuya and Harajuku.","tiles":[{"icon":"sun","label":"Daytime","value":"Calm","sub":"Low activity","tone":"good"},{"icon":"crowd","label":"Crowds","value":"Busy","sub":"Popular areas","tone":"warn"},{"icon":"shield","label":"Police presence","value":"Visible","sub":"In major areas","tone":"blue"}],"demo":true,"known":true},"paris":{"name":"Paris","country":"France","grade":"B+","mood":"Mostly calm","tint":"city","summary":"Calm across most of the city.","summarySub":"Pickpocketing is the one thing to watch.","headline":"Keep bags closed on the Metro","detail":"Reported around Gare du Nord and Chatelet.","tiles":[{"icon":"sun","label":"Daytime","value":"Calm","sub":"Low activity","tone":"good"},{"icon":"crowd","label":"Crowds","value":"Heavy","sub":"Tourist sites","tone":"warn"},{"icon":"transit","label":"Transport","value":"Running","sub":"Minor delays","tone":"blue"}],"demo":true,"known":true},"new york":{"name":"New York","country":"United States","grade":"B+","mood":"Calm overall","tint":"city","summary":"Calm across most of Manhattan and Brooklyn.","summarySub":"Normal city awareness after dark.","headline":"Stay where people are late at night","detail":"Platforms get quiet after midnight.","tiles":[{"icon":"sun","label":"Daytime","value":"Calm","sub":"Low activity","tone":"good"},{"icon":"crowd","label":"Crowds","value":"Busy","sub":"Midtown","tone":"warn"},{"icon":"transit","label":"Transport","value":"Running","sub":"Weekend works","tone":"blue"}],"demo":true,"known":true},"bangkok":{"name":"Bangkok","country":"Thailand","grade":"B","mood":"Calm, watch traffic","tint":"temple","summary":"Calm across the central districts.","summarySub":"Traffic and heat are the real risks here.","headline":"Agree the fare before you get in","detail":"Tuk tuk overcharging around Khao San and the Grand Palace.","tiles":[{"icon":"sun","label":"Daytime","value":"Hot","sub":"33 and humid","tone":"warn"},{"icon":"crowd","label":"Crowds","value":"Busy","sub":"Markets","tone":"warn"},{"icon":"car","label":"Traffic","value":"Heavy","sub":"Most of the day","tone":"blue"}],"demo":true,"known":true},"thailand":{"name":"Thailand","country":"","grade":"A-","mood":"Calm overall","tint":"water","summary":"Calm across the places on your plan.","summarySub":"Wet season, so the risk is weather rather than people.","headline":"Storms build in the afternoon","detail":"Waterfall pools run fast after heavy rain.","tiles":[{"icon":"sun","label":"Daytime","value":"Warm","sub":"26 to 31","tone":"good"},{"icon":"rain","label":"Rain","value":"Likely","sub":"Most afternoons","tone":"warn"},{"icon":"crowd","label":"Crowds","value":"Moderate","sub":"Falls fill after noon","tone":"blue"}],"demo":true,"known":true},"utah":{"name":"Utah","country":"United States","grade":"A","mood":"Calm overall","tint":"mountain","summary":"Calm. This is remote country rather than risky country.","summarySub":"The hazard out here is distance, not people.","headline":"Tell someone your route before you go","detail":"No mobile signal on Byway 12 or at Natural Bridges.","tiles":[{"icon":"sun","label":"Daytime","value":"Hot","sub":"36 to 38","tone":"warn"},{"icon":"signal","label":"Signal","value":"None","sub":"Most of the route","tone":"warn"},{"icon":"drop","label":"Water","value":"Carry more","sub":"No refill for 90km","tone":"blue"}],"demo":true,"known":true}};
+  var BRIEF_FALLBACK = {"name":"zzz-no-such-place","country":"","grade":"?","mood":"No sources","tint":"city","summary":"No live sources are connected for this destination.","summarySub":"The prototype ships briefings for a short list of places.","headline":"Nothing to flag, because nothing is connected","detail":"Wire a real advisory source to make this live.","tiles":[{"icon":"sun","label":"Daytime","value":"Unknown","sub":"No source","tone":"mute"},{"icon":"crowd","label":"Crowds","value":"Unknown","sub":"No source","tone":"mute"},{"icon":"shield","label":"Alerts","value":"Off","sub":"Nothing connected","tone":"mute"}],"demo":true,"known":false};
+  var BAKED = "2026-10-14";
+  var blank = {title:"",destination:"",days:0,people:[],wants:[],cards:[],source:"",mode:"",partnerDone:false};
+  var state = JSON.parse(JSON.stringify(blank));
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  function reply(body){ return Promise.resolve({ ok:true, json:function(){ return Promise.resolve(body); } }); }
+  // Same rule as the server with no key: a built-in sample gets its own trip, anything else gets
+  // the Thailand trip marked sample-no-key, so the page can say it is not the visitor's conversation.
+  function pick(text){
+    var best = SAMPLES[0], matched = false;
+    for (var i=0;i<SAMPLES.length;i++){
+      if (String(text||"").trim().slice(0,60) === SAMPLES[i].text.slice(0,60)) { best = SAMPLES[i]; matched = true; break; }
+    }
+    var t = clone(TRIPS[best.id]);
+    if (!matched) t.mode = "sample-no-key";
+    return t;
+  }
+  window.fetch = function(url, opts){
+    var o = opts || {}, b = {};
+    try { b = JSON.parse(o.body || "{}"); } catch(e) {}
+    url = String(url);
+    if (url.indexOf("/api/state") === 0)
+      return reply(Object.assign({}, state, {hasKey:false, sample:SAMPLES[0].text, samples:SAMPLES}));
+    if (url.indexOf("/api/plan") === 0) { state = pick(b.transcript); return reply(state); }
+    if (url.indexOf("/api/decide") === 0) {
+      var c = (state.cards||[]).find(function(x){ return x.id === b.id; });
+      if (c) { if (b.who === "partner") c.partner = b.decision || ""; else c.decision = b.decision || ""; }
+      return reply(state);
+    }
+    if (url.indexOf("/api/partner-done") === 0) { state.partnerDone = true; return reply(state); }
+    if (url.indexOf("/api/book") === 0) {
+      var d = (state.cards||[]).find(function(x){ return x.id === b.id; });
+      if (d) {
+        var stamp = 0, t = String(d.title);
+        for (var k=0;k<t.length;k++) stamp = (stamp*31 + t.charCodeAt(k)) | 0;
+        d.booked = { ref: (d.book||"HAII").slice(0,3).toUpperCase() + "-" + (Math.abs(stamp)%900000+100000), demo:true };
+      }
+      return reply(state);
+    }
+    // The forecast was saved at build time. baked carries that date so the page labels it a snapshot.
+    if (url.indexOf("/api/weather") === 0) return reply({ days: state.weather || [], baked: BAKED });
+    if (url.indexOf("/api/live") === 0) { state.live = true; if (b.day) state.liveDay = b.day; return reply(state); }
+    if (url.indexOf("/api/move") === 0) {
+      var mc = (state.cards||[]).find(function(x){ return x.id === b.id; });
+      if (mc && b.day) mc.day = b.day;
+      return reply(state);
+    }
+    if (url.indexOf("/api/ask") === 0) {
+      var inn = (state.cards||[]).filter(function(c){ return c.decision === "in" && (state.partner ? c.partner === "in" : true); });
+      var ql = String(b.q||"").toLowerCase(), ans;
+      var dm = ql.match(/day ([0-9]+)/);
+      if (dm) { var dd = Number(dm[1]); var its = inn.filter(function(c){ return Number(c.day) === dd; });
+        ans = its.length ? "Day " + dd + ": " + its.map(function(c){ return (c.time||"any time") + " " + c.title; }).join(", ") + "." : "Nothing is planned for day " + dd + " yet."; }
+      else if (/eat|food|dinner|lunch|restaurant/.test(ql)) { var f = inn.filter(function(c){ return c.kind === "food"; });
+        ans = f.length ? "Food on this trip: " + f.map(function(c){ return c.title + " on day " + c.day; }).join(", ") + "." : "No meals are planned yet."; }
+      else if (/cost|budget|spend|money|how much/.test(ql)) { var heads = (state.people||[]).length || 2;
+        var tot = inn.reduce(function(a2,c){ return a2 + (Number(String(c.cost).replace(/[^0-9.]/g,"")) || 0) * heads; }, 0);
+        ans = "About $" + Math.round(tot) + " for " + heads + " of you, across " + inn.length + " things."; }
+      else { ans = "Your trip has " + inn.length + " things. Ask me about a specific day, the food, or the budget."; }
+      return reply({ answer: ans, mode: "offline" });
+    }
+    // Briefings. Same matching order as briefFor() on the server: exact, then substring, then the
+    // honest fallback. No regex and no escapes in here, because this whole block lives inside a
+    // template literal and a stray backslash-b would become a backspace character.
+    if (url.indexOf("/api/brief") === 0) {
+      var raw = String(url).split("dest=")[1] || "";
+      var q = "";
+      try { q = decodeURIComponent(raw).trim().toLowerCase(); } catch (e) { q = raw.toLowerCase(); }
+      if (BRIEFS[q]) return reply(BRIEFS[q]);
+      var keys = Object.keys(BRIEFS), hit = "";
+      for (var bi = 0; bi < keys.length; bi++) {
+        if (q && (q.indexOf(keys[bi]) >= 0 || keys[bi].indexOf(q) >= 0)) { hit = keys[bi]; break; }
+      }
+      if (hit) return reply(BRIEFS[hit]);
+      var fb = clone(BRIEF_FALLBACK);
+      fb.name = q ? q.charAt(0).toUpperCase() + q.slice(1) : "Nowhere yet";
+      return reply(fb);
+    }
+    if (url.indexOf("/api/reset") === 0) { state = clone(blank); return reply(state); }
+    return reply({});
+  };
+})();
+</script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KIND={place:{l:"Place",c:"var(--k-place)"},food:{l:"Food",c:"var(--k-food)"},do:{l:"Do",c:"var(--k-do)"},
+ stay:{l:"Stay",c:"var(--k-stay)"},move:{l:"Hold",c:"var(--k-move)"}};
+const AV=["#2563EB","#6D28D9","#0E7490","#B45309"];
+let S={cards:[],wants:[],title:"",people:[],hasKey:false,sample:"",partner:null};
+let undoStack=[];
+
+function show(v){for(const id of ["vStart","vRead","vDeck","vHand","vOverlap","vPlan","vLive"])$("#"+id).classList.toggle("hide",id!==v);}
+function enterApp(){hideBriefs();$("#vIntro").classList.add("hide");$("#hdr").classList.remove("hide");$("#mainWrap").classList.remove("hide");
+  try{localStorage.setItem("haii-intro","1");}catch(e){}}
+/* The main button goes to the product, the conversation screen. The briefing is the side path. */
+$("#introGo").addEventListener("click",enterApp);
+$("#introSkip").addEventListener("click",function(){showBrief(2);});
+
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2100);}
+async function api(p,o){const r=await fetch(p,o);const j=await r.json();if(!r.ok)throw new Error(j.error||"failed");return j;}
+/* The person holding the phone. Only the built-in trips know who that is, because their scripted
+   partner names the other traveller. A live trip lists people in whatever order the model chose,
+   so it gets no name rather than a guess. */
+const me=()=>S.partner?((S.people||[]).find(p=>p!==S.partner.name)||""):"";
+const them=()=>(S.partner&&S.partner.name)||(S.people&&S.people[0])||"Maya";
+
+/* With no key, every conversation gets a built-in trip. Only the two sample conversations are the
+   real source of that trip, so any other text must be told it is looking at a built-in trip. The
+   server and the single-file demo's stub say so themselves (mode "sample-no-key") for text that
+   does not start like a sample. Otherwise the text is compared here, which catches a sample
+   conversation that was edited after its first 60 characters, on the server and in the single-file
+   demo alike. */
+const isSample=text=>{const t=String(text||"").trim();return (S.samples||[]).some(x=>String(x.text||"").trim()===t);};
+const cannedFor=text=>S.mode==="sample-no-key"||(S.mode==="sample"&&Boolean(String(text||"").trim())&&!isSample(text));
+const notYours=()=>S.mode==="sample-after-error"||S.canned===true;
+const yours=()=>notYours()?"the built-in conversation":"your conversation";
+
+/* Sort key for a card's time. Built-in trips write "19:30". A live model may write "7:30 PM" or
+   "Morning". An empty time sorts first and text that cannot be read sorts after every clock time,
+   so the built-in trips keep exactly the order a plain string sort gave them. */
+function timeKey(t){
+  const s=String(t==null?"":t).trim().toLowerCase();
+  if(!s)return -1;
+  const m=s.match(/(\d{1,2})(?:[:.](\d{2}))?\s*(a\.?m\.?|p\.?m\.?)?/);
+  if(m){
+    let h=Number(m[1])%24;const min=Number(m[2]||0);
+    if(m[3])h=h%12+(m[3].charAt(0)==="p"?12:0);
+    return h*60+min;
+  }
+  const words=[["sunrise",360],["dawn",360],["breakfast",480],["morning",540],["afternoon",900],
+    ["noon",720],["midday",720],["lunch",720],["sunset",1110],["evening",1140],["dinner",1140],["night",1260]];
+  for(const [w,v] of words)if(s.includes(w))return v;
+  return 1440;
+}
+
+/* How well a card matches what was asked for. A means it came from a firm want, B+ from a soft
+   one, C means nobody asked for it at all. */
+function gradeOf(c){
+  if(c.note2==="conflict"||!c.quote)return{g:"C",warn:true};
+  const w=(S.wants||[]).find(x=>x.quote&&(c.quote.includes(x.quote)||x.quote.includes(c.quote)));
+  return{g:w&&w.firm?"A":"B+",warn:false};
+}
+
+/* ---------- scene art. Procedural, no images, no network. ---------- */
+function scene(c){
+  const P={water:["#0E5E8A","#3F9FC4","#CDE6F2"],food:["#8A4B12","#D08A2B","#F2DDB4"],
+   wild:["#14563C","#3F8E63","#C6E2CE"],temple:["#6E3E14","#C08A34","#F0DCB4"],
+   beach:["#0B5E8A","#37A0C4","#F0E4C6"],mountain:["#2C3A66","#5F76A8","#CFD8EA"],
+   city:["#20385E","#5478A8","#CBD8EA"],hold:["#3E4654","#7C8798","#D6DCE6"]}[c.scene||"city"]||["#20385E","#5478A8","#CBD8EA"];
+  const seed=[...String(c.title)].reduce((a,ch)=>a+ch.charCodeAt(0),0);
+  const h1=24+(seed%14), h2=44+(seed%20);
+  return `<svg viewBox="0 0 400 126" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="sk${seed}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${P[0]}"/><stop offset="1" stop-color="${P[1]}"/></linearGradient></defs>
+    <rect width="400" height="126" fill="url(#sk${seed})"/>
+    <circle cx="${306+(seed%48)}" cy="32" r="16" fill="${P[2]}" opacity=".5"/>
+    <path d="M0 ${126-h2} Q 90 ${106-h2} 170 ${126-h2} T 400 ${120-h2} V126 H0 Z" fill="${P[2]}" opacity=".32"/>
+    <path d="M0 ${126-h1} Q 110 ${112-h1} 210 ${126-h1} T 400 ${124-h1} V126 H0 Z" fill="${P[2]}" opacity=".58"/>
+  </svg>`;
+}
+
+/* ---------- boot ---------- */
+(async function boot(){
+  S=await api("/api/state");
+  /* After a reload the server still holds the text the trip was made from. */
+  S.canned=cannedFor(S.source);
+  $("#modeText").textContent=S.hasKey?"live extraction on":"demo mode, built-in trips";
+  /* The hosted single-file demo has no server to restart, so it gets its own note. */
+  $("#startNote").textContent=S.hasKey?"Talk or paste anything. It extracts from your own words."
+    :window.HAII_TRIPS_STANDALONE?"This page is a demo with two built-in trips. Run it yourself with a Claude API key to plan from your own conversation."
+    :"No API key set, so this runs the built-in conversations. Add ANTHROPIC_API_KEY and restart for live extraction.";
+  let seen=false;try{seen=localStorage.getItem("haii-intro")==="1";}catch(e){}
+  if(seen||(S.cards&&S.cards.length))enterApp();
+  if(S.cards&&S.cards.length)route();else show("vStart");
+})();
+
+/* ---------- dictation ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,listening=false,baseText="";
+if(!SR){$("#mic").disabled=true;$("#mic").style.opacity=".55";$("#micLbl").textContent="Dictation needs Chrome or Edge";}
+else $("#mic").addEventListener("click",()=>{
+  if(listening){rec&&rec.stop();return;}
+  rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang="en-US";
+  baseText=$("#ta").value?$("#ta").value.replace(/\s+$/,"")+" ":"";
+  rec.onstart=()=>{listening=true;$("#mic").classList.add("on");$("#micLbl").textContent="Listening, tap to stop";};
+  rec.onresult=e=>{let done="",live="";
+    for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal)done+=t+" ";else live+=t;}
+    if(done)baseText+=done;$("#ta").value=baseText+live;$("#ta").scrollTop=$("#ta").scrollHeight;};
+  rec.onerror=ev=>{listening=false;$("#mic").classList.remove("on");
+    $("#micLbl").textContent=ev.error==="not-allowed"?"Microphone blocked, allow it and retry":"Start listening";};
+  rec.onend=()=>{listening=false;$("#mic").classList.remove("on");$("#micLbl").textContent="Start listening";};
+  try{rec.start();}catch(e){toast("Could not start the microphone");}
+});
+
+const sampleText=id=>((S.samples||[]).find(x=>x.id===id)||{}).text||S.sample;
+$("#useSample").addEventListener("click",()=>{$("#ta").value=sampleText("thailand");toast("Thailand conversation loaded");});
+$("#useSample2").addEventListener("click",()=>{$("#ta").value=sampleText("utah");toast("Road trip conversation loaded");});
+
+/* ---------- plan it ---------- */
+$("#go").addEventListener("click",async()=>{
+  const transcript=$("#ta").value.trim();
+  if(transcript.length<40){toast("Say a bit more about the trip first");return;}
+  show("vRead");$("#heard").innerHTML="";$("#rtitle").textContent="Listening to the conversation";
+  let res=null,err=null;
+  api("/api/plan",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({transcript})})
+    .then(r=>res=r).catch(e=>err=e);
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  while(!res&&!err)await wait(120);
+  if(err){show("vStart");toast(err.message);return;}
+  /* A new trip starts clean. The reply only carries what it has, so anything left from the last
+     trip (a partner, a started trip, the day) would otherwise leak into this one. */
+  S={...S,partner:null,partnerDone:false,live:false,liveDay:1,error:"",...res};undoStack=[];
+  S.canned=cannedFor(transcript);paintLiveFail();
+  $("#rtitle").textContent=notYours()?"Here's what they each asked for"
+    :(S.people||[]).length>1?"Here's what you each asked for":"Here's what I heard";
+  for(const w of S.wants){
+    const idx=Math.max(0,(S.people||[]).indexOf(w.who));
+    const d=document.createElement("div");d.className="heard";
+    d.innerHTML=`<div class="hwho" style="background:${AV[idx%AV.length]}">${esc(String(w.who).slice(0,1))}</div>
+      <div><div class="htxt">${esc(w.text)}</div><div class="hq">“${esc(w.quote)}”</div></div>`;
+    $("#heard").appendChild(d);d.scrollIntoView({block:"end"});
+    await wait(230);
+  }
+  await wait(650);
+  route();
+});
+
+/* Two cases return a built-in trip for someone's own words: a live extraction that failed (always
+   Thailand), and no key at all. Either way it must never pass for the person's own conversation,
+   so the notice stays above the deck and the plan until the next trip. */
+function paintLiveFail(){
+  const failed=S.mode==="sample-after-error",canned=!failed&&S.canned===true;
+  $("#liveFail").classList.toggle("hide",!(failed||canned));
+  if(failed)$("#liveFail").innerHTML=bico("alert")+"<p>Live extraction failed"+(S.error?" ("+esc(S.error)+")":"")+
+    ". This is the built-in Thailand trip, not your conversation.</p>";
+  else if(canned)$("#liveFail").innerHTML=bico("alert")+"<p>This is the built-in "+esc(S.destination||"Thailand")+" trip, not your conversation. "+
+    (window.HAII_TRIPS_STANDALONE
+      ?"This demo only plays its two built-in conversations. Run Haii Trips yourself with a Claude API key to plan from your own words."
+      :"Add a Claude API key and it builds the deck from your own words.")+"</p>";
+}
+
+function route(){
+  paintLiveFail();
+  const ppl=S.people||[];
+  const names=ppl.length>2?ppl.slice(0,-1).join(", ")+" and "+ppl[ppl.length-1]:ppl.join(" and ");
+  $("#hstat").innerHTML=S.title?`<b>${esc(S.title)}</b>${esc(names)}`:"";
+  if(S.cards.some(c=>!c.decision)){show("vDeck");renderDeck();}
+  else if(S.partner&&!S.partnerDone&&!S.cards.every(c=>c.partner)){renderHandoff();}
+  else if(S.live){show("vLive");renderLive();}
+  else if(S.partner){renderOverlap();}
+  else {show("vPlan");renderPlan();}
+}
+
+/* ---------- deck ---------- */
+const pending=()=>S.cards.filter(c=>!c.decision);
+function renderDeck(){
+  const q=pending(),total=S.cards.length;
+  const who=me();
+  $("#deckWho").textContent=who;$("#deckWho").style.background=AV[0];$("#deckWho").classList.toggle("hide",!who);
+  $("#deckTitle").textContent=who?"your turn":"Your turn";
+  $("#deckCount").textContent=`${q.length} left`;
+  $("#deckBar").style.width=`${Math.round(((total-q.length)/total)*100)}%`;
+  $("#bUndo").disabled=!undoStack.length;
+  const d=$("#deck");d.innerHTML="";
+  q.slice(0,3).reverse().forEach((c,idx,arr)=>{
+    const depth=arr.length-1-idx,k=KIND[c.kind]||KIND.place,gr=gradeOf(c);
+    const el=document.createElement("article");
+    el.className="card"+(depth===1?" behind1":depth===2?" behind2":"")+(c.note2==="conflict"?" conflict":"");
+    el.innerHTML=`<div class="scene">${scene(c)}
+        <span class="kpill" style="color:${k.c}">${k.l}</span></div>
+      <div class="cbody">
+        <div class="ctop"><div><h3 class="ctitle">${esc(c.title)}</h3>
+          <div class="cwhere">${esc(c.where)}</div></div>
+          <span class="grade${gr.warn?" warn":""}">${gr.g}</span></div>
+        <div class="quote"><div class="qlbl">${c.quote?"From "+yours():"Nobody asked for this"}</div>
+          <div class="qtxt">${c.quote?"“"+esc(c.quote)+"”":"Nothing in "+yours()+" points here."}</div></div>
+        <p class="cnote">${esc(c.note)}</p>
+        <div class="cfoot"><span class="meta">Day ${esc(c.day)}</span>
+          ${c.time?`<span class="meta">${esc(c.time)}</span>`:""}
+          <span class="meta">${esc(c.cost)}</span>
+          ${c.book?`<span class="bookpill">${esc(c.book)}</span>`:""}</div>
+      </div>
+      <div class="stampR">IN</div><div class="stampL">NOPE</div>`;
+    d.appendChild(el);
+    if(depth===0)drag(el,c);
+  });
+  if(!q.length)route();
+}
+
+/* Horizontal only, commit at 24% of width, rotation dx*0.08, throw to 1.5x. */
+function drag(el,card){
+  let x0=0,y0=0,dx=0,active=false,id=null;
+  const W=()=>el.offsetWidth||330;
+  el.addEventListener("pointerdown",e=>{if(e.button&&e.button!==0)return;
+    active=true;id=e.pointerId;x0=e.clientX;y0=e.clientY;dx=0;
+    try{el.setPointerCapture(id);}catch(_){} el.style.transition="none";});
+  el.addEventListener("pointermove",e=>{if(!active||e.pointerId!==id)return;
+    const ax=e.clientX-x0,ay=e.clientY-y0;
+    if(Math.abs(ay)>Math.abs(ax)&&Math.abs(ay)>14&&Math.abs(ax)<10)return;
+    dx=ax;el.style.transform=`translateX(${dx}px) rotate(${dx*0.08}deg)`;
+    const p=Math.min(1,Math.abs(dx)/(W()*0.24));
+    el.querySelector(".stampR").style.opacity=dx>0?p:0;
+    el.querySelector(".stampL").style.opacity=dx<0?p:0;});
+  const end=e=>{if(!active||(e.pointerId!==undefined&&e.pointerId!==id))return;active=false;
+    if(Math.abs(dx)>W()*0.24)fly(el,card,dx>0?"in":"out");
+    else{el.style.transition="transform .22s ease";el.style.transform="";
+      el.querySelector(".stampR").style.opacity=0;el.querySelector(".stampL").style.opacity=0;}};
+  el.addEventListener("pointerup",end);el.addEventListener("pointercancel",end);
+}
+function fly(el,card,decision){
+  const w=(el.offsetWidth||330)*1.5;
+  el.style.transition="transform .3s ease,opacity .3s ease";
+  el.style.transform=`translateX(${decision==="in"?w:-w}px) rotate(${decision==="in"?24:-24}deg)`;
+  el.style.opacity="0";
+  card.decision=decision;undoStack.push(card.id);
+  api("/api/decide",{method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({id:card.id,decision})}).catch(()=>toast("Could not save that"));
+  setTimeout(renderDeck,255);
+}
+function press(d){const q=pending();if(!q.length)return;
+  const el=$("#deck .card:not(.behind1):not(.behind2)");if(el)fly(el,q[0],d);}
+$("#bYes").addEventListener("click",()=>press("in"));
+$("#bNo").addEventListener("click",()=>press("out"));
+$("#bUndo").addEventListener("click",async()=>{
+  const id=undoStack.pop();if(!id)return;
+  const c=S.cards.find(x=>x.id===id);if(c)c.decision="";
+  await api("/api/decide",{method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({id,decision:""})}).catch(()=>{});
+  renderDeck();toast("Back in the deck");
+});
+window.addEventListener("keydown",e=>{
+  if($("#vDeck").classList.contains("hide"))return;
+  if(/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;
+  if(e.key==="ArrowRight")press("in");if(e.key==="ArrowLeft")press("out");
+});
+
+/* ---------- handoff ----------
+   Only the built-in trips have a second swiper, and their swipes are scripted (partner.picks).
+   Nothing goes to another phone, and both screens say so. */
+function renderHandoff(){
+  show("vHand");
+  $("#vHand").innerHTML=`<div class="mid">
+    <div class="bigface" style="background:${AV[1]}">${esc(them().slice(0,1))}</div>
+    <h2>Now it is ${esc(them())}'s turn</h2>
+    <p>${esc(them())} swipes the same deck. The trip is what you both said yes to. In the built-in trips this is scripted. Nothing is sent to another phone.</p>
+    <button class="cta" id="sendDeck">Show ${esc(them())}'s swipes
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>`;
+  $("#sendDeck").addEventListener("click",partnerSwipe);
+}
+async function partnerSwipe(){
+  const picks=new Set((S.partner&&S.partner.picks)||[]);
+  $("#vHand").innerHTML=`<div class="mid">
+    <div class="bigface" style="background:${AV[1]}">${esc(them().slice(0,1))}</div>
+    <h2>${esc(them())} is swiping (simulated)</h2><p>In the built-in trips this is scripted.</p><div class="ticker" id="ticker"></div></div>`;
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  for(const c of S.cards){
+    const yes=picks.has(c.id);
+    c.partner=yes?"in":"out";
+    api("/api/decide",{method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({id:c.id,decision:c.partner,who:"partner"})}).catch(()=>{});
+    const row=document.createElement("div");row.className="trow";
+    row.innerHTML=`<div class="tmark" style="background:${yes?"var(--good)":"var(--bad)"}">${yes?"✓":"✕"}</div>
+      <div class="tname">${esc(c.title)}</div>`;
+    const t=$("#ticker");t.appendChild(row);
+    if(t.children.length>7)t.removeChild(t.firstChild);
+    await wait(260);
+  }
+  S.partnerDone=true;
+  await api("/api/partner-done",{method:"POST"}).catch(()=>{});
+  await wait(500);
+  renderOverlap();
+}
+
+/* ---------- overlap ---------- */
+function renderOverlap(){
+  show("vOverlap");
+  const both=S.cards.filter(c=>c.decision==="in"&&c.partner==="in");
+  const onlyYou=S.cards.filter(c=>c.decision==="in"&&c.partner==="out");
+  const onlyThem=S.cards.filter(c=>c.decision==="out"&&c.partner==="in");
+  const neither=S.cards.filter(c=>c.decision==="out"&&c.partner==="out");
+  const sec=(title,list,cls,label,note)=>list.length?`<div class="ovhead"><h3>${title}</h3><span class="n">${list.length}</span></div>
+    ${note?`<p class="sub" style="margin:-4px 0 9px;font-size:13px">${note}</p>`:""}
+    ${list.map(c=>`<div class="orow"><div><div class="t">${esc(c.title)}</div><div class="w">${esc(c.where)}</div></div>
+      <span class="otag ${cls}">${label}</span></div>`).join("")}`:"";
+  const name=esc(them());
+  $("#vOverlap").innerHTML=`<div style="margin-top:14px">
+    <h1 class="big">You agree on <b>${both.length} of ${S.cards.length}.</b></h1>
+    <p class="sub">That is the trip. The rest is a conversation you were going to have anyway, except now you know what it is about. ${name}'s swipes are scripted in the built-in trips.</p>
+    ${sec("Both of you said yes",both,"both","agreed")}
+    ${sec("Only you",onlyYou,"you","yours",name+" swiped these away. Worth one sentence each over dinner.")}
+    ${sec("Only "+name,onlyThem,"them",name+"'s","You swiped these away and "+name+" wants them.")}
+    ${sec("Neither of you",neither,"none","dropped")}
+    <div style="margin-top:22px"><button class="cta" id="toPlan">Build the plan
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  </div>`;
+  $("#toPlan").addEventListener("click",()=>{show("vPlan");renderPlan();});
+}
+
+/* ---------- live, in trip ----------
+   The plan stops being a document and becomes something happening.
+
+   The weather is real, from Open-Meteo, which needs no key and no account. It is the only live
+   signal in the app. The single-file demo has no server, so its /api/weather reply carries
+   baked: "YYYY-MM-DD", the day the forecast was saved, and the screen says so. */
+let WX=null, WXAT=0, WXBAKED="", ANSWER=null, ADAPT=null;
+const WXICON={
+  sun:'<path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M6 6 4.5 4.5M19.5 19.5 18 18M18 6l1.5-1.5M4.5 19.5 6 18"/><circle cx="12" cy="12" r="4.2"/>',
+  cloud:'<path d="M7 18h10a4 4 0 0 0 .3-8A6 6 0 0 0 6 11a3.5 3.5 0 0 0 1 7Z"/>',
+  rain:'<path d="M7 15h10a4 4 0 0 0 .3-8A6 6 0 0 0 6 8a3.5 3.5 0 0 0 1 7Z"/><path d="M8 19l-1 2M12 19l-1 2M16 19l-1 2"/>',
+  snow:'<path d="M7 15h10a4 4 0 0 0 .3-8A6 6 0 0 0 6 8a3.5 3.5 0 0 0 1 7Z"/><path d="M9 19h.01M13 19h.01M11 21h.01"/>',
+  storm:'<path d="M7 14h10a4 4 0 0 0 .3-8A6 6 0 0 0 6 7a3.5 3.5 0 0 0 1 7Z"/><path d="m12 15-2 4h3l-2 4"/>'
+};
+const outdoorish=c=>(c.kind==="do"||c.kind==="place")&&["water","wild","mountain","beach"].includes(c.scene||"");
+
+async function renderLive(){
+  const inn=S.cards.filter(c=>S.partner?(c.decision==="in"&&c.partner==="in"):c.decision==="in");
+  const days=[...new Set(inn.map(c=>Number(c.day)))].sort((a,b)=>a-b);
+  if(!days.length){show("vPlan");renderPlan();return;}
+  const day=days.includes(Number(S.liveDay))?Number(S.liveDay):days[0];
+  if(!WX){try{const wr=await api("/api/weather");WX=wr.days;WXBAKED=String(wr.baked||"");WXAT=Date.now();}
+    catch(e){WX=[];WXBAKED="";}}
+  const w=(WX||[])[day-1]||null;
+  const todays=inn.filter(c=>Number(c.day)===day).sort((a,b)=>timeKey(a.time)-timeKey(b.time));
+  const hour=new Date().getHours();
+  const greet=hour<12?"Good morning":hour<18?"Good afternoon":"Good evening";
+  const place=(todays[0]||{}).where||S.destination||"";
+
+  /* Adaptation. It fires only when there is a drier or clearer day to move to, and two things have
+     to be right.
+
+     ONE: fire on the thing that is actually spoiled, not the first outdoor-ish card of the day.
+     Rain does not spoil a drive, cloud spoils stargazing. Each card is scored against what this
+     specific weather ruins.
+
+     TWO: never contradict itself. Open-Meteo's condition code and its rain probability can
+     disagree ("Drizzle" at 1%). So the copy names only the signal that triggered it: the rain
+     probability for rain, the sky for stargazing. */
+  ADAPT=null;
+  if(w){
+    const cloudy=w.code>=3, likelyRain=w.rain>=40||(w.wet&&w.rain>=25);
+    const spoil=c=>{
+      if(!(c.kind==="do"||c.kind==="place"))return 0;
+      const txt=((c.title||"")+" "+(c.note||"")).toLowerCase();
+      if(/drive|driving|byway|route|road trip/.test(txt))return 0;   // rain does not cancel a drive
+      if(/star|dark sky|astronom|sunset|sunrise/.test(txt))return cloudy?3:0;  // cloud is the enemy
+      if(["water","wild","beach","mountain"].includes(c.scene||""))return likelyRain?2:0;
+      return 0;
+    };
+    const ranked=todays.map(c=>({c,s:spoil(c)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+    if(ranked.length){
+      const victim=ranked[0].c, starry=ranked[0].s===3;
+      // "Better" means meaningfully better than TODAY, not perfect. Requiring a clear night on a
+      // trip where every night is overcast meant the suggestion never appeared at all, which is
+      // correct logic and a useless feature. A strictly clearer sky, or 15 points less rain.
+      const better=days.filter(d=>d!==day).map(d=>({d,w:(WX||[])[d-1]}))
+        .filter(x=>x.w&&(starry?x.w.code<w.code:(x.w.rain<=w.rain-15&&!x.w.wet)))
+        .sort((a,b)=>starry?(a.w.code-b.w.code):(a.w.rain-b.w.rain))[0];
+      if(better)ADAPT={victim,to:better.d,starry,
+        why:starry?(w.text.toLowerCase()+" tonight, so you will not see much")
+                   :(w.rain+"% chance of rain today")};
+    }
+  }
+
+  let html='<div class="greet"><h1>'+esc(greet)+(me()?', <b>'+esc(me())+'</b>':'')+'.</h1>'+
+    '<div class="where">'+(place?"You're in "+esc(place)+". ":"")+
+    'Day '+day+' of '+esc(S.title||"your trip")+'</div></div>';
+
+  if(w){
+    html+='<div class="wx"><div class="wxicon'+(w.wet?" wet":"")+'"><svg viewBox="0 0 24 24">'+
+      (WXICON[w.icon]||WXICON.cloud)+'</svg></div>'+
+      '<div><div class="wxtemp">'+esc(w.max)+'&deg;</div>'+
+      '<div class="wxtext">'+esc(w.text)+', low '+esc(w.min)+'&deg;</div></div>'+
+      '<div class="wxrain">'+esc(w.rain)+'%<span>rain</span></div></div>';
+    /* Status line and tiles. With the server behind it the forecast is a real Open-Meteo call,
+       cached on the server for up to 30 minutes, so it gets a green dot and the time since the page
+       fetched it. The single-file demo answers from a forecast saved when it was built, so it gets
+       a grey dot and the date it was saved. Every value below is derived, none is written.
+       Open-Meteo's licence asks for a link to it. */
+    const OM='<a href="https://open-meteo.com/" target="_blank" rel="noopener" style="color:inherit">Open-Meteo</a>';
+    const mins=WXAT?Math.max(0,Math.round((Date.now()-WXAT)/60000)):0;
+    html+='<div class="blive" style="margin:-4px 0 12px">'+(WXBAKED
+      ?'<i style="background:var(--faint)"></i><span>Forecast saved on '+esc(WXBAKED)+
+        '. Run it yourself and it is fetched live. Data from '+OM+'.</span>'
+      :'<i></i><span>Live from '+OM+', '+(mins<1?"just now":mins+"m ago")+'</span>')+'</div>';
+    // No Likely/Unlikely word on the rain tile. Open-Meteo will say Drizzle at 1%, and a tile
+    // reading "Drizzle" beside a tile reading "Unlikely" looks broken. The number alone is safe.
+    const wet=w.rain>=40;
+    html+='<div class="btiles" style="margin-bottom:14px">'+
+      '<div class="btile '+(w.wet?"warn":"good")+'"><div class="badgeicon">'+bico("sun")+'</div>'+
+        '<b>Daytime</b><em>'+esc(w.text)+'</em><i>'+esc(w.min)+' to '+esc(w.max)+' degrees</i></div>'+
+      '<div class="btile '+(wet?"warn":"good")+'"><div class="badgeicon">'+bico("rain")+'</div>'+
+        '<b>Rain</b><em>'+esc(w.rain)+'%</em><i>chance today</i></div>'+
+      '<div class="btile blue"><div class="badgeicon">'+bico("pin")+'</div>'+
+        '<b>Today</b><em>'+todays.length+(todays.length===1?" stop":" stops")+'</em>'+
+        '<i>'+esc(place||"on the plan")+'</i></div>'+
+      '</div>';
+  }
+
+  if(ADAPT){
+    html+='<div class="adapt"><h4>Plans change</h4><p>'+
+      esc(ADAPT.why.charAt(0).toUpperCase()+ADAPT.why.slice(1))+
+      '. <b>'+esc(ADAPT.victim.title)+'</b> is the one that suffers. Move it to day '+
+      esc(ADAPT.to)+'?</p><div class="arow">'+
+      '<button class="yes" id="adaptYes">Move it to day '+esc(ADAPT.to)+'</button>'+
+      '<button class="no" id="adaptNo">Leave it</button></div></div>';
+  }
+
+  html+='<div class="daystrip">'+days.map(function(d){
+    const dw=(WX||[])[d-1];
+    return '<button class="daypill'+(d===day?" on":"")+(dw&&dw.wet?" wet":"")+'" data-day="'+d+'">'+
+      '<b>Day '+d+'</b><i>'+(dw?esc(dw.max)+"°":"&middot;")+'</i></button>';
+  }).join("")+'</div>';
+
+  if(ANSWER)html+='<div class="answer"><b>Haii</b>'+esc(ANSWER)+'</div>';
+
+  html+='<div class="ovhead"><h3>Today</h3><span class="n">'+todays.length+'</span></div>';
+  if(!todays.length)html+='<div class="empty">Nothing planned today.<br>A day off is allowed.</div>';
+  for(const c of todays){
+    const k=KIND[c.kind]||KIND.place;
+    let acts="";
+    if(c.book)acts+=c.booked
+      ?'<span class="ibtn done">Booked</span><span class="iref">'+esc(c.booked.ref)+'</span>'
+      :'<button class="ibtn book" data-book="'+esc(c.id)+'">Book on '+esc(c.book)+'</button>';
+    if(c.ride)acts+=rideBit(c);
+    html+='<div class="item"><div class="itime" style="color:'+k.c+'">'+esc(c.time||"any")+'</div>'+
+      '<div class="ibody"><div class="ititle">'+esc(c.title)+'</div>'+
+      '<div class="iwhere">'+esc(c.where)+'</div>'+
+      (acts?'<div class="iacts">'+acts+'</div>':"")+'</div>'+
+      '<div class="icost">'+esc(c.cost)+'</div></div>';
+  }
+
+  html+='<div style="margin-top:18px"><button class="ghost" id="backPlan" style="width:100%">See the whole plan</button></div>'+
+    '<div class="asktray"><div class="askbox">'+
+    '<input id="askq" aria-label="Ask about your trip" placeholder="Ask about your trip" autocomplete="off">'+
+    '<button class="asksend" id="askgo"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>'+
+    '</div></div>';
+
+  const v=$("#vLive");v.innerHTML=html;
+  v.querySelectorAll("[data-day]").forEach(function(b){b.addEventListener("click",function(){
+    S.liveDay=Number(b.dataset.day);ANSWER=null;
+    api("/api/live",{method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({day:S.liveDay})}).catch(function(){});
+    renderLive();});});
+  v.querySelectorAll("[data-book]").forEach(function(b){b.addEventListener("click",function(){
+    const c=S.cards.find(function(x){return x.id===b.dataset.book;});if(c)bookSheet(c,renderLive);});});
+  v.querySelectorAll("[data-ride]").forEach(function(b){b.addEventListener("click",function(){
+    const c=S.cards.find(function(x){return x.id===b.dataset.ride;});if(c)rideSheet(c);});});
+  const ay=$("#adaptYes");if(ay)ay.addEventListener("click",async function(){
+    const mv=ADAPT;
+    await api("/api/move",{method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({id:mv.victim.id,day:mv.to})}).catch(function(){});
+    mv.victim.day=mv.to;toast("Moved to day "+mv.to);renderLive();});
+  const an=$("#adaptNo");if(an)an.addEventListener("click",function(){
+    ADAPT=null;toast("Left where it was");
+    const el=$("#vLive .adapt");if(el)el.remove();});
+  const bp=$("#backPlan");if(bp)bp.addEventListener("click",function(){show("vPlan");renderPlan();});
+  const ask=async function(){
+    const q=$("#askq").value.trim();if(!q)return;
+    $("#askq").value="";ANSWER="Thinking…";renderLive();
+    try{const r=await api("/api/ask",{method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({q:q})});ANSWER=r.answer;}catch(e){ANSWER="I could not answer that.";}
+    renderLive();
+  };
+  $("#askgo").addEventListener("click",ask);
+  $("#askq").addEventListener("keydown",function(e){if(e.key==="Enter")ask();});
+}
+
+/* ---------- booking handoff. SIMULATED, and it says so on screen. ---------- */
+const VENDOR={"Viator":"#1A7F6B","Grab":"#00B14F","GetYourGuide":"#FF5533","Booking.com":"#003580","OpenTable":"#DA3743",
+ "Recreation.gov":"#1E5631","Uber":"#111111","Haii":"#1E3A8A"};
+function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
+$("#sheetBg").addEventListener("click",closeSheet);
+function openSheet(html){$("#sheet").innerHTML='<div class="grab"></div>'+html;
+  $("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
+function bookSheet(c,after){
+  const v=c.book||"Haii",col=VENDOR[v]||"#111";
+  const unit=Number(String(c.cost).replace(/[^0-9.]/g,""))||0;
+  const people=(S.people||["you"]).length||2;
+  const total=unit*people;
+  openSheet(`<div class="vhead"><span class="vmark" style="background:${col}">${esc(v)}</span>
+      <span class="demo">Demo</span></div>
+    <h3>${esc(c.title)}</h3><div class="swhere">${esc(c.where)} · Day ${esc(c.day)}${c.time?" · "+esc(c.time):""}</div>
+    <div class="vrow"><span>${esc(c.cost)}${/\d$/.test(String(c.cost))?" per person":""}</span><b>${people} travelling</b></div>
+    <div class="vrow"><span>Booking fee</span><b>none</b></div>
+    <div class="vrow total"><span>Total</span><b>${curSym()}${total.toFixed(0)}</b></div>
+    <button class="cta" id="doBook">Reserve on ${esc(v)}</button>
+    <p class="fine">Simulated handoff. No vendor is contacted and no money moves.</p>`);
+  $("#doBook").addEventListener("click",async()=>{
+    $("#doBook").disabled=true;$("#doBook").textContent="Reserving…";
+    try{
+      const t=await api("/api/book",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:c.id})});
+      S.cards=t.cards;
+      const card=S.cards.find(x=>x.id===c.id);
+      openSheet(`<div class="vhead"><span class="vmark" style="background:${col}">${esc(v)}</span>
+          <span class="demo">Demo</span></div>
+        <div class="conf"><div class="confmark">✓</div>
+        <h3>Reserved</h3><div class="swhere">${esc(card.title)}</div>
+        <div class="confref">${esc(card.booked.ref)}</div>
+        <p class="fine">Simulated. No vendor was contacted, nothing was booked and no money moved.</p></div>
+        <button class="cta" id="closeConf" style="margin-top:8px">Done</button>`);
+      $("#closeConf").addEventListener("click",()=>{closeSheet();(after||renderPlan)();});
+    }catch(e){toast("Could not reserve");closeSheet();}
+  });
+}
+/* Only a hailed ride gets the request sheet. "Drive", "Walk", "Ferry" and the like are just how you
+   get there, so they show as plain text rather than a sheet with a pickup point. */
+const hailed=c=>/^(uber|lyft|grab|bolt|taxi|cab|transfer)$/i.test(String(c.ride||"").trim());
+function rideBit(c){
+  if(!c.ride)return "";
+  if(!hailed(c))return '<span class="iref">'+esc(c.ride)+(c.rideCost?", "+esc(c.rideCost):"")+'</span>';
+  return '<button class="ibtn" data-ride="'+esc(c.id)+'">'+esc(c.ride)+' '+esc(c.rideCost)+'</button>';
+}
+function rideSheet(c){
+  if(!hailed(c))return;
+  const col=VENDOR[c.ride]||VENDOR.Uber;
+  openSheet(`<div class="vhead"><span class="vmark" style="background:${col}">${esc(c.ride)}</span>
+      <span class="demo">Demo</span></div>
+    <h3>Get to ${esc(c.title)}</h3><div class="swhere">${esc(c.where)}</div>
+    <div class="vrow"><span>Pickup</span><b>where you are staying</b></div>
+    <div class="vrow"><span>Arrives by</span><b>${esc(c.time||"when you like")}</b></div>
+    <div class="vrow total"><span>Estimate</span><b>${esc(c.rideCost||"n/a")}</b></div>
+    <button class="cta" id="doRide">Request ${esc(c.ride)}</button>
+    <p class="fine">Simulated. No ride is requested.</p>`);
+  $("#doRide").addEventListener("click",()=>{closeSheet();toast("Simulated. No ride was requested.");});
+}
+
+/* The built-in trips are priced in dollars. A trip built from a real conversation is priced in
+   whatever the travellers talked in, so a total takes its symbol from the cards instead of assuming. */
+function curSym(){
+  for(const c of S.cards||[]){const m=String(c.cost||"").match(/[$€£¥₺₹]/);if(m)return m[0];}
+  return "$";
+}
+
+/* ---------- map, drawn from coordinates. No tiles, no API. ---------- */
+function mapSvg(list){
+  const pts=list.filter(c=>typeof c.lat==="number"&&typeof c.lng==="number");
+  if(pts.length<1)return "";
+  const lats=pts.map(p=>p.lat),lngs=pts.map(p=>p.lng);
+  /* Padding follows the spread of the trip. A fixed 0.6 of a degree suits a country and squeezes a
+     city, where every stop is within a few kilometres, into a single dot. */
+  const span=Math.max(Math.max(...lats)-Math.min(...lats),Math.max(...lngs)-Math.min(...lngs));
+  const pad=Math.min(.6,Math.max(.01,span*.12));
+  const minLat=Math.min(...lats)-pad,maxLat=Math.max(...lats)+pad;
+  const minLng=Math.min(...lngs)-pad,maxLng=Math.max(...lngs)+pad;
+  const W=380,H=210;
+  const x=p=>((p.lng-minLng)/Math.max(.001,maxLng-minLng))*(W-46)+23;
+  const y=p=>H-23-((p.lat-minLat)/Math.max(.001,maxLat-minLat))*(H-46);
+  const ordered=[...pts].sort((a,b)=>a.day-b.day);
+  const line=ordered.map((p,i)=>`${i?"L":"M"}${x(p).toFixed(1)} ${y(p).toFixed(1)}`).join(" ");
+  const dots=ordered.map((p,i)=>{const k=KIND[p.kind]||KIND.place;
+    return `<g><circle cx="${x(p).toFixed(1)}" cy="${y(p).toFixed(1)}" r="9.5" fill="#fff" opacity=".95"/>
+      <circle cx="${x(p).toFixed(1)}" cy="${y(p).toFixed(1)}" r="6" fill="${k.c}"/>
+      <text x="${x(p).toFixed(1)}" y="${(y(p)+2.6).toFixed(1)}" text-anchor="middle"
+        style="font:700 7px var(--sans);fill:#fff">${i+1}</text></g>`;}).join("");
+  return `<svg viewBox="0 0 ${W} ${H}">
+    <path d="${line}" fill="none" stroke="rgba(30,58,138,.5)" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round"/>
+    ${dots}</svg>`;
+}
+
+function renderPlan(){
+  const inn=S.cards.filter(c=>S.partner?(c.decision==="in"&&c.partner==="in"):c.decision==="in")
+    .sort((a,b)=>(a.day-b.day)||(timeKey(a.time)-timeKey(b.time)));
+  const days=[...new Set(inn.map(c=>c.day))].sort((a,b)=>a-b);
+  const heads=(S.people||["you"]).length||2;
+  const spend=inn.reduce((a,c)=>a+(Number(String(c.cost).replace(/[^0-9.]/g,""))||0)*heads,0);
+  let h=`<div class="decktop"><h2>${esc(S.title||"Your trip")}</h2></div>`;
+  if(!inn.length){h+=`<div class="empty">Nothing made it in.<br>Everything got swiped away, which is a real answer too.</div>`;}
+  else{
+    h+=`<div class="mapwrap">${mapSvg(inn)}</div>
+    <div class="stats">
+      <div class="stat"><b>${inn.length}</b><span>things in</span></div>
+      <div class="stat"><b>${curSym()}${Math.round(spend)}</b><span>trip cost</span></div>
+      <div class="stat"><b>${inn.filter(c=>c.booked).length}</b><span>booked</span></div>
+    </div>`;
+    for(const d of days){
+      h+=`<div class="day"><div class="dhead"><span class="dnum">Day ${d}</span><span class="dline"></span></div>`;
+      for(const c of inn.filter(x=>x.day===d)){
+        const k=KIND[c.kind]||KIND.place,acts=[];
+        if(c.book)acts.push(c.booked
+          ?`<span class="ibtn done">Booked</span><span class="iref">${esc(c.booked.ref)}</span>`
+          :`<button class="ibtn book" data-book="${esc(c.id)}">Book on ${esc(c.book)}</button>`);
+        if(c.ride)acts.push(rideBit(c));
+        h+=`<div class="item"><div class="itime" style="color:${k.c}">${esc(c.time||"any")}</div>
+          <div class="ibody"><div class="ititle">${esc(c.title)}</div><div class="iwhere">${esc(c.where)}</div>
+            ${acts.length?`<div class="iacts">${acts.join("")}</div>`:""}</div>
+          <div class="icost">${esc(c.cost)}</div></div>`;
+      }
+      h+=`</div>`;
+    }
+  }
+  h+=`<div class="sect"><h3>What we heard</h3>
+    <p>Every line came out of ${yours()}. Blue ones are rules, not wishes.</p>`;
+  for(const w of S.wants)h+=`<div class="want"><div class="wtick${w.firm?" firm":""}">${w.firm?"!":"✓"}</div>
+    <div><div class="wtxt">${esc(w.text)}</div>${w.quote?`<div class="wq">“${esc(w.quote)}” ${esc(w.who)}</div>`:""}</div></div>`;
+  h+=`</div>
+  <div style="margin-top:20px"><button class="cta" id="goLive">Start the trip
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  <div style="margin-top:9px"><button class="ghost" id="again" style="width:100%">Start another trip</button></div>`;
+  $("#vPlan").innerHTML=h;
+  $("#vPlan").querySelectorAll("[data-book]").forEach(b=>b.addEventListener("click",()=>{
+    const c=S.cards.find(x=>x.id===b.dataset.book);if(c)bookSheet(c);}));
+  $("#vPlan").querySelectorAll("[data-ride]").forEach(b=>b.addEventListener("click",()=>{
+    const c=S.cards.find(x=>x.id===b.dataset.ride);if(c)rideSheet(c);}));
+  const gl=$("#goLive");if(gl)gl.addEventListener("click",async()=>{
+    S.live=true;WX=null;ANSWER=null;
+    await api("/api/live",{method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({day:1})}).catch(()=>{});
+    show("vLive");renderLive();});
+  $("#again").addEventListener("click",async()=>{await api("/api/reset",{method:"POST"});
+    S.cards=[];S.partner=null;S.partnerDone=false;S.live=false;S.liveDay=1;S.mode="";S.error="";S.canned=false;paintLiveFail();undoStack=[];$("#ta").value="";$("#hstat").innerHTML="";show("vStart");});
+}
+
+/* ---------- safety briefing flow ----------
+ * Three screens behind the welcome screen's secondary link. Content is handwritten on the server
+ * and stamped demo:true.
+ *
+ * Copy rule: nothing on these screens may claim live data, a recent update time, alerts or a
+ * trend. None of that exists here, and this is safety copy rather than a booking. A destination
+ * with no handwritten briefing (known:false) gets a neutral state, never a green tick.
+ */
+const BICON={
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ crowd:'<circle cx="9" cy="8" r="3"/><path d="M2 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><path d="M17 6.2a3 3 0 0 1 0 5.6M18.5 14.2A4.5 4.5 0 0 1 22 18.5V20"/>',
+ shield:'<path d="M12 3 4 6v6c0 4.4 3.4 8.2 8 9 4.6-.8 8-4.6 8-9V6l-8-3Z"/>',
+ shieldok:'<path d="M12 3 4 6v6c0 4.4 3.4 8.2 8 9 4.6-.8 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/>',
+ transit:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 11h14M8.5 19.5 7 22M15.5 19.5 17 22"/><circle cx="9" cy="14" r=".6"/><circle cx="15" cy="14" r=".6"/>',
+ car:'<path d="M4 16v2M20 16v2M3 13l1.6-4.4A2.5 2.5 0 0 1 7 7h10a2.5 2.5 0 0 1 2.4 1.6L21 13v3H3v-3Z"/><circle cx="7.5" cy="16" r="0"/>',
+ rain:'<path d="M7 15a4.5 4.5 0 0 1 .4-9A6 6 0 0 1 18.5 8a3.5 3.5 0 0 1 .3 7"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3"/>',
+ signal:'<path d="M2 20h.01M6.5 20v-4M11 20v-8M15.5 20v-12M20 20V4"/>',
+ drop:'<path d="M12 3s6 6.4 6 10.5A6 6 0 0 1 6 13.5C6 9.4 12 3 12 3Z"/>',
+ bookmark:'<path d="M6 3.5h12v17l-6-4.2-6 4.2v-17Z"/>',
+ map:'<path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/>',
+ bell:'<path d="M18 10a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6Z"/><path d="M10.5 20a2 2 0 0 0 3 0"/>',
+ pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/>',
+ alert:'<path d="M12 3 1.8 20.5h20.4L12 3Z"/><path d="M12 10v4M12 17.2v.1"/>',
+ chev:'<path d="m9 6 6 6-6 6"/>'
+};
+const bico=n=>'<svg viewBox="0 0 24 24">'+(BICON[n]||BICON.shield)+'</svg>';
+
+/* Procedural sky, same principle as scene(): no images, no network, tinted by place. */
+function bsky(tint,seedTxt){
+  const P={city:["#C6D8F0","#E9F1FB"],water:["#AFD6EA","#E2F0F8"],mountain:["#C8D3E8","#E9EEF8"],
+   temple:["#E7D6BA","#F4EBDA"],beach:["#B6DCEA","#EDF3F0"],wild:["#C2DBCB","#E9F2EC"]}[tint||"city"]||["#C6D8F0","#E9F1FB"];
+  const seed=[...String(seedTxt||"x")].reduce((a,c)=>a+c.charCodeAt(0),0);
+  const a=30+(seed%26), b=64+(seed%34), id="bs"+seed;
+  let o='<svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMin slice" aria-hidden="true">';
+  o+='<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1">';
+  o+='<stop offset="0" stop-color="'+P[0]+'"/><stop offset="1" stop-color="'+P[1]+'"/></linearGradient></defs>';
+  o+='<rect width="400" height="400" fill="url(#'+id+')"/>';
+  o+='<circle cx="'+(292+(seed%50))+'" cy="82" r="30" fill="#FFFFFF" opacity=".42"/>';
+  o+='<path d="M0 '+(300-b)+' Q 96 '+(258-b)+' 186 '+(300-b)+' T 400 '+(292-b)+' V400 H0 Z" fill="#FFFFFF" opacity=".26"/>';
+  if((tint||"city")==="city"){
+    o+='<g opacity=".30" fill="#FFFFFF">';
+    for(let i=0;i<7;i++){const w=26+((seed+i*13)%22), h=54+((seed+i*29)%96);
+      o+='<rect x="'+(28+i*52)+'" y="'+(302-h)+'" width="'+w+'" height="'+h+'" rx="3"/>';}
+    o+='</g>';
+  }
+  o+='<path d="M0 '+(304-a)+' Q 112 '+(272-a)+' 214 '+(304-a)+' T 400 '+(300-a)+' V400 H0 Z" fill="#FFFFFF" opacity=".44"/>';
+  o+='<path d="M-20 318 Q 66 292 156 318 T 316 314 T 420 326 V400 H-20 Z" fill="#F2F5FA" opacity=".84"/>';
+  o+='<path d="M-20 350 Q 80 328 176 352 T 340 346 T 420 360 V400 H-20 Z" fill="#F6F8FC" opacity=".95"/>';
+  return o+'</svg>';
+}
+
+let BRIEF=null, BDEST="";
+const BPOPULAR=["Tokyo","Paris","New York","Bangkok"];
+
+function hideBriefs(){for(const id of ["vBrief2","vBrief3","vBrief4"]){const e=$("#"+id);if(e)e.classList.remove("on");}}
+function showBrief(n){
+  hideBriefs();
+  $("#vIntro").classList.add("hide");
+  $("#hdr").classList.add("hide");
+  $("#mainWrap").classList.add("hide");
+  const e=$("#vBrief"+n);if(e)e.classList.add("on");
+  if(n===2){$("#sky2").innerHTML=bsky("city","where");}
+}
+
+function renderChips(){
+  const box=$("#destChips");if(!box)return;
+  box.innerHTML=BPOPULAR.map(function(d,i){
+    return '<button class="chip" data-d="'+esc(d)+'">'+esc(d)+'</button>';
+  }).join("");
+  box.querySelectorAll(".chip").forEach(function(b){
+    b.addEventListener("click",function(){
+      $("#destq").value=b.dataset.d;
+      box.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+    });
+  });
+}
+
+async function loadBrief(dest){
+  BDEST=dest;
+  try{BRIEF=await api("/api/brief?dest="+encodeURIComponent(dest));}
+  catch(e){BRIEF=null;}
+  return BRIEF;
+}
+
+function renderB3(){
+  const b=BRIEF;if(!b)return;
+  $("#sky3").innerHTML=bsky(b.tint,b.name);
+  $("#b3h").innerHTML=(b.known?"A sample briefing for <b>":"No sample briefing for <b>")+esc(b.name)+".</b>";
+  $("#b3go").textContent=b.known?"Looks good":"Continue";
+  const where=esc(b.name)+(b.country?", "+esc(b.country):"");
+  let h='<div class="bgrip"></div>';
+  h+='<div class="btop"><div class="pin">'+bico("pin")+'</div><div>';
+  h+='<h2>'+where+'</h2>';
+  h+='<div class="blive"><i style="background:var(--faint)"></i>Demo briefing, handwritten</div></div>';
+  h+='<div class="bgrade'+(b.known?"":" mute")+'"><b>'+esc(b.grade)+'</b><i>'+esc(b.mood)+'</i></div></div>';
+  h+='<div class="bsum'+(b.known?'':' mute')+'"><div class="badgeicon">'+bico(b.known?"shieldok":"alert")+'</div>';
+  h+='<p>'+esc(b.summary)+'<i>'+esc(b.summarySub)+'</i></p></div>';
+  h+='<div class="beyebrow">What to know</div>';
+  h+='<div class="binsight"><div class="badgeicon">'+bico("crowd")+'</div><div>';
+  h+='<h4>'+esc(b.headline)+'</h4><p>'+esc(b.detail)+'</p></div></div>';
+  h+='<div class="btiles">'+(b.tiles||[]).map(function(t){
+    return '<div class="btile '+esc(t.tone||"blue")+'"><div class="badgeicon">'+bico(t.icon)+'</div>'+
+      '<b>'+esc(t.label)+'</b><em>'+esc(t.value)+'</em><i>'+esc(t.sub)+'</i></div>';
+  }).join("")+'</div>';
+  h+='<div class="bstamp">'+bico("alert")+'<p>Demo content, handwritten for this prototype. '+
+     'No safety source is connected. Do not travel on this.</p></div>';
+  $("#b3sheet").innerHTML=h;
+}
+
+function renderB4(){
+  const b=BRIEF;if(!b)return;
+  $("#sky4").innerHTML=bsky(b.tint,b.name+"done");
+  $("#b4h").innerHTML=b.known?"That was the sample for <b>"+esc(b.name)+".</b>":"No briefing for <b>"+esc(b.name)+".</b>";
+  const where=esc(b.name)+(b.country?", "+esc(b.country):"");
+  let h='<div class="bdone"><div class="bthumb">'+bsky(b.tint,b.name)+'</div><div style="min-width:0">';
+  h+='<div style="font:600 15px/1.2 var(--sans);letter-spacing:-.01em">'+where+'</div>';
+  h+='<div style="font:700 14px/1 var(--sans);color:'+(b.known?"var(--good-ink)":"var(--faint)")+';margin-top:6px">'+
+     esc(b.grade)+' <span style="font-weight:600;font-size:12.5px">'+esc(b.mood)+'</span></div>';
+  h+='<div class="blive"><i style="background:var(--faint)"></i>Demo briefing, handwritten</div>';
+  h+='</div></div>';
+  h+=b.known
+    ?'<div class="bok">'+bico("shieldok")+'<p>You are set for the demo.<i>No alerts are sent in this prototype.</i></p></div>'
+    :'<div class="bok mute">'+bico("alert")+'<p>Nothing is connected for this place.<i>No alerts are sent in this prototype.</i></p></div>';
+  $("#b4body").innerHTML=h;
+}
+
+/* wiring */
+renderChips();
+$("#b2go").addEventListener("click",async function(){
+  const q=($("#destq").value||"").trim()||S.destination||"Tokyo";
+  $("#b2go").disabled=true;
+  await loadBrief(q);
+  $("#b2go").disabled=false;
+  if(!BRIEF){toast("Could not load the briefing");return;}
+  renderB3();showBrief(3);
+});
+$("#destq").addEventListener("keydown",function(e){if(e.key==="Enter")$("#b2go").click();});
+$("#b2skip").addEventListener("click",enterApp);
+$("#b3go").addEventListener("click",function(){renderB4();showBrief(4);});
+$("#b3back").addEventListener("click",function(){showBrief(2);});
+$("#b4go").addEventListener("click",enterApp);
+
+</script>
+</body>
+</html>

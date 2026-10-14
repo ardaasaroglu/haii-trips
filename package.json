@@ -1,0 +1,33 @@
+{
+  "name": "haii-trips",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A conversation becomes a trip. A local prototype that turns what people said into a deck to swipe, where every card quotes the words behind it. Zero dependencies.",
+  "keywords": [
+    "travel",
+    "trip-planning",
+    "claude",
+    "anthropic",
+    "open-meteo",
+    "prototype",
+    "zero-dependencies"
+  ],
+  "homepage": "https://github.com/ardaasaroglu/haii-trips#readme",
+  "bugs": {
+    "url": "https://github.com/ardaasaroglu/haii-trips/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ardaasaroglu/haii-trips.git"
+  },
+  "license": "MIT",
+  "author": "Arda Asaroglu",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "check": "node check.mjs"
+  }
+}

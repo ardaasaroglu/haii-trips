@@ -1,0 +1,6 @@
+# normalize line endings in the repo
+* text=auto eol=lf
+# Windows launchers want Windows line endings
+*.cmd text eol=crlf
+# built by `node build-standalone.js`, not written by hand
+haii-trips-demo.html linguist-generated

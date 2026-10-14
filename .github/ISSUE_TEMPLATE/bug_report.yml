@@ -1,0 +1,25 @@
+name: Bug report
+description: Something does not work the way the README says it should.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what you saw. Do not paste an API key, a token or a private conversation.
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Local run or the live demo, plus your OS, Node version and browser. For a local run, say whether a Claude key was set.
+      placeholder: Local run, no key, Windows 11, Node 22, Chrome
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Server output or browser console errors
+      description: Remove anything private before you paste.
+      render: text

@@ -1,0 +1,14 @@
+.env
+data/
+node_modules/
+
+# other env files, keep the example
+.env.*
+!.env.example
+
+# editor, agent and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/settings.local.json

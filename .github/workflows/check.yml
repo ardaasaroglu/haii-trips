@@ -1,0 +1,33 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Start the server
+        run: |
+          node server.js &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:4830/api/state > /dev/null && exit 0
+            sleep 1
+          done
+          echo "server did not start"
+          exit 1
+      - name: Run the checks
+        run: node check.mjs
